@@ -1,0 +1,81 @@
+<resources>
+    <string name="app_name">Slinky</string>
+    <string name="login_problem">无法登陆？</string>
+    <string name="login">登录</string>
+    <string name="register">注册Slinky</string>
+    <string name="register1">注册</string>
+    <string name="nextstep">下一步</string>
+    <string name="useragreement">用户使用协议</string>
+    <string name="ID">学号</string>
+    <string name="password">密码</string>
+    <string name="nickname">昵称</string>
+
+
+    <string name="mine_item_activity">活 动</string>
+    <string name="mine_item_appstore">应用推荐</string>
+    <string name="mine_item_day_mode">日间</string>
+    <string name="mine_item_favorite">收藏</string>
+    <string name="mine_item_feedback">反 馈</string>
+    <string name="mine_item_forum">话题</string>
+    <string name="mine_item_friend_update">好友动态</string>
+    <string name="mine_item_game">游 戏</string>
+    <string name="mine_item_message">消息</string>
+    <string name="mine_item_night_mode">夜间</string>
+    <string name="mine_item_notification">消息通知</string>
+    <string name="mine_item_offline">离 线</string>
+    <string name="mine_item_offline_cancel">取消离线</string>
+    <string name="mine_item_pgc">作品管理</string>
+    <string name="mine_item_sell">商 城</string>
+    <string name="mine_item_sell_introduce">特卖、头彩、电影</string>
+    <string name="mine_item_settings">设置</string>
+    <string name="mine_item_tag_new">NEW</string>
+    <string name="mine_tab_followers_error_tips">你还没有粉丝</string>
+    <string name="mine_tab_followers_title">粉丝</string>
+    <string name="mine_tab_followings_add_follow">添加关注</string>
+    <string name="mine_tab_followings_error_tips">你还没有关注任何人</string>
+    <string name="mine_tab_followings_title">关注</string>
+    <string name="mine_tab_visitors_error_tips">还没有人访问过你</string>
+    <string name="mine_tab_visitors_title">7天访客</string>
+    <string name="mine_login_hint">登录推荐更精准</string>
+
+    <string name="txt"> 程序计数器
+程序计数器是线程私有的区域，很好理解嘛~，每个线程当然得有个计数器记录当前执行到那个指令。占用的内存空间小，可以把它看成是当前线程所执行的字节码的行号指示器。如果线程在执行Java方法，这个计数器记录的是正在执行的虚拟机字节码指令地址；如果执行的是Native方法，这个计数器的值为空（Undefined）。此内存区域是唯一一个在Java虚拟机规范中没有规定任何OutOfMemoryError情况的区域。
+Java虚拟机栈与程序计数器一样，Java虚拟机栈也是线程私有的。其生命周期与线程相同。如何理解虚拟机栈呢？本质上来讲，就是个栈。里面存放的元素叫栈帧，栈帧好像很复杂的样子，其实它很简单！它里面存放的是一个函数的上下文，具体存放的是执行的函数的一些数据。执行的函数需要的数据无非就是局部变量表（保存函数内部的变量）、操作数栈（执行引擎计算时需要），方法出口等等。
+执行引擎每调用一个函数时，就为这个函数创建一个栈帧，并加入虚拟机栈。换个角度理解，每个函数从调用到执行结束，其实是对应一个栈帧的入栈和出栈。注意这个区域可能出现的两种异常：一种是StackOverflowError，当前线程请求的栈深度大于虚拟机所允许的深度时，会抛出这个异常。制造这种异常很简单：将一个函数反复递归自己，最终会程序计数器是线程私有的区域，很好理解嘛~，每个线程当然得有个计数器记录当前执行到那个指令。占用的内存空间小，可以把它看成是当前线程所执行的字节码的行号指示器。如果线程在执行Java方法，这个计数器记录的是正在执行的虚拟机字节码指令地址；如果执行的是Native方法，这个计数器的值为空（Undefined）。此内存区域是唯一一个在Java虚拟机规范中没有规定任何OutOfMemoryError情况的区域。
+Java虚拟机栈与程序计数器一样，Java虚拟机栈也是线程私有的。其生命周期与线程相同。如何理解虚拟机栈呢？本质上来讲，就是个栈。里面存放的元素叫栈帧，栈帧好像很复杂的样子，其实它很简单！它里面存放的是一个函数的上下文，具体存放的是执行的函数的一些数据。执行的函数需要的数据无非就是局部变量表（保存函数内部的变量）、操作数栈（执行引擎计算时需要），方法出口等等。
+执行引擎每调用一个函数时，就为这个函数创建一个栈帧，并加入虚拟机栈。换个角度理解，每个函数从调用到执行结束，其实是对应一个栈帧的入栈和出栈。注意这个区域可能出现的两种异常：一种是StackOverflowError，当前线程请求的栈深度大于虚拟机所允许的深度时，会抛出这个异常。制造这种异常很简单：将一个函数反复递归自己，最终会程序计数器是线程私有的区域，很好理解嘛~，每个线程当然得有个计数器记录当前执行到那个指令。占用的内存空间小，可以把它看成是当前线程所执行的字节码的行号指示器。如果线程在执行Java方法，这个计数器记录的是正在执行的虚拟机字节码指令地址；如果执行的是Native方法，这个计数器的值为空（Undefined）。此内存区域是唯一一个在Java虚拟机规范中没有规定任何OutOfMemoryError情况的区域。
+Java虚拟机栈与程序计数器一样，Java虚拟机栈也是线程私有的。其生命周期与线程相同。如何理解虚拟机栈呢？本质上来讲，就是个栈。里面存放的元素叫栈帧，栈帧好像很复杂的样子，其实它很简单！它里面存放的是一个函数的上下文，具体存放的是执行的函数的一些数据。执行的函数需要的数据无非就是局部变量表（保存函数内部的变量）、操作数栈（执行引擎计算时需要），方法出口等等。
+执行引擎每调用一个函数时，就为这个函数创建一个栈帧，并加入虚拟机栈。换个角度理解，每个函数从调用到执行结束，其实是对应一个栈帧的入栈和出栈。注意这个区域可能出现的两种异常：一种是StackOverflowError，当前线程请求的栈深度大于虚拟机所允许的深度时，会抛出这个异常。制造这种异常很简单：将一个函数反复递归自己，最终会程序计数器是线程私有的区域，很好理解嘛~，每个线程当然得有个计数器记录当前执行到那个指令。占用的内存空间小，可以把它看成是当前线程所执行的字节码的行号指示器。如果线程在执行Java方法，这个计数器记录的是正在执行的虚拟机字节码指令地址；如果执行的是Native方法，这个计数器的值为空（Undefined）。此内存区域是唯一一个在Java虚拟机规范中没有规定任何OutOfMemoryError情况的区域。
+Java虚拟机栈与程序计数器一样，Java虚拟机栈也是线程私有的。其生命周期与线程相同。如何理解虚拟机栈呢？本质上来讲，就是个栈。里面存放的元素叫栈帧，栈帧好像很复杂的样子，其实它很简单！它里面存放的是一个函数的上下文，具体存放的是执行的函数的一些数据。执行的函数需要的数据无非就是局部变量表（保存函数内部的变量）、操作数栈（执行引擎计算时需要），方法出口等等。
+执行引擎每调用一个函数时，就为这个函数创建一个栈帧，并加入虚拟机栈。换个角度理解，每个函数从调用到执行结束，其实是对应一个栈帧的入栈和出栈。注意这个区域可能出现的两种异常：一种是StackOverflowError，当前线程请求的栈深度大于虚拟机所允许的深度时，会抛出这个异常。制造这种异常很简单：将一个函数反复递归自己，最终会程序计数器是线程私有的区域，很好理解嘛~，每个线程当然得有个计数器记录当前执行到那个指令。占用的内存空间小，可以把它看成是当前线程所执行的字节码的行号指示器。如果线程在执行Java方法，这个计数器记录的是正在执行的虚拟机字节码指令地址；如果执行的是Native方法，这个计数器的值为空（Undefined）。此内存区域是唯一一个在Java虚拟机规范中没有规定任何OutOfMemoryError情况的区域。
+Java虚拟机栈与程序计数器一样，Java虚拟机栈也是线程私有的。其生命周期与线程相同。如何理解虚拟机栈呢？本质上来讲，就是个栈。里面存放的元素叫栈帧，栈帧好像很复杂的样子，其实它很简单！它里面存放的是一个函数的上下文，具体存放的是执行的函数的一些数据。执行的函数需要的数据无非就是局部变量表（保存函数内部的变量）、操作数栈（执行引擎计算时需要），方法出口等等。
+执行引擎每调用一个函数时，就为这个函数创建一个栈帧，并加入虚拟机栈。换个角度理解，每个函数从调用到执行结束，其实是对应一个栈帧的入栈和出栈。注意这个区域可能出现的两种异常：一种是StackOverflowError，当前线程请求的栈深度大于虚拟机所允许的深度时，会抛出这个异常。制造这种异常很简单：将一个函数反复递归自己，最终会</string>
+
+    <string-array name="title_array">
+        <item>SNG</item>
+        <item>IEG</item>
+        <item>WXG</item>
+        <item>OMG</item>
+        <item>CDG</item>
+        <item>MIG</item>
+    </string-array>
+    <string-array name="download_array">
+        <item>http://bayanbox.ir/view/4177858657730907268/introduction-to-algorithms-3rd-edition.pdf</item>
+        <item>http://bayanbox.ir/view/4177858657730907268/introduction-to-algorithms-3rd-edition.pdf</item>
+        <item>http://bayanbox.ir/view/4177858657730907268/introduction-to-algorithms-3rd-edition.pdf</item>
+        <item>http://bayanbox.ir/view/4177858657730907268/introduction-to-algorithms-3rd-edition.pdf</item>
+        <item>http://bayanbox.ir/view/4177858657730907268/introduction-to-algorithms-3rd-edition.pdf</item>
+        <item>http://bayanbox.ir/view/4177858657730907268/introduction-to-algorithms-3rd-edition.pdf</item>
+        <item>http://bayanbox.ir/view/4177858657730907268/introduction-to-algorithms-3rd-edition.pdf</item>
+        <item>http://bayanbox.ir/view/4177858657730907268/introduction-to-algorithms-3rd-edition.pdf</item>
+        <item>http://bayanbox.ir/view/4177858657730907268/introduction-to-algorithms-3rd-edition.pdf</item>
+        <item>http://bayanbox.ir/view/4177858657730907268/introduction-to-algorithms-3rd-edition.pdf</item>
+        <item>http://bayanbox.ir/view/4177858657730907268/introduction-to-algorithms-3rd-edition.pdf</item>
+        <item>http://bayanbox.ir/view/4177858657730907268/introduction-to-algorithms-3rd-edition.pdf</item>
+        <item>http://bayanbox.ir/view/4177858657730907268/introduction-to-algorithms-3rd-edition.pdf</item>
+        <item>http://bayanbox.ir/view/4177858657730907268/introduction-to-algorithms-3rd-edition.pdf</item>
+        <item>http://bayanbox.ir/view/4177858657730907268/introduction-to-algorithms-3rd-edition.pdf</item>
+        <item>http://bayanbox.ir/view/4177858657730907268/introduction-to-algorithms-3rd-edition.pdf</item>
+    </string-array>
+
+</resources>
