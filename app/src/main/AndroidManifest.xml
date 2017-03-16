@@ -32,6 +32,11 @@
             android:label=""
             android:launchMode="singleInstance">
         </activity>
+        <activity
+            android:name=".activity.Club"
+            android:label=""
+            android:launchMode="singleInstance">
+        </activity>
         <service
             android:name=".localService">
             <intent-filter>

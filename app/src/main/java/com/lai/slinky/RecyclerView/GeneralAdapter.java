@@ -17,6 +17,7 @@ public class GeneralAdapter extends RecyclerView.Adapter<GeneralAdapter.MyViewHo
 
     private List<team> mDatas;
     private LayoutInflater mInflater;
+    private ItemClickListener ClickListener;
 
     public GeneralAdapter(Context context, List<team> mDatas) {
         this.mDatas = mDatas;
@@ -37,6 +38,34 @@ public class GeneralAdapter extends RecyclerView.Adapter<GeneralAdapter.MyViewHo
         holder.tvTeamTitle.setText(tdata.title);
         holder.tvTeamInfo.setText(tdata.charge1);
         holder.tvTeamType.setText(tdata.type);
+
+        //创建view时添加监听事件
+        if(ClickListener != null){
+            holder.tvTeamTitle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ClickListener.OnItemClick(view,position);
+                }
+            });
+            holder.tvTeamInfo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ClickListener.OnItemClick(view,position);
+                }
+            });
+            holder.tvTeamType.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ClickListener.OnItemClick(view,position);
+                }
+            });
+        }
+    }
+
+    //设置adapter接口
+    public GeneralAdapter setClickListener(ItemClickListener ClickListener){
+        this.ClickListener = ClickListener;
+        return this;
     }
 
     @Override
@@ -45,7 +74,6 @@ public class GeneralAdapter extends RecyclerView.Adapter<GeneralAdapter.MyViewHo
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-
         TextView tvTeamTitle;
         TextView tvTeamInfo;
         TextView tvTeamType;
@@ -55,7 +83,14 @@ public class GeneralAdapter extends RecyclerView.Adapter<GeneralAdapter.MyViewHo
             tvTeamTitle = (TextView) view.findViewById(R.id.text_team_title);
             tvTeamInfo = (TextView) view.findViewById(R.id.text_team_info);
             tvTeamType = (TextView) view.findViewById(R.id.text_team_type);
-
         }
+
+    }
+    public interface ItemClickListener{
+        //声明接口ItemClickListener
+        void OnItemClick(View view,int position);
+//        void OnTitleClick(View view,int position);
+//        void OnInfoClick(View view,int position);
+//        void OnTypeClick(View view,int position);
     }
 }

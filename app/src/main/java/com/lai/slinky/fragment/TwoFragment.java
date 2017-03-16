@@ -15,12 +15,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.lai.slinky.R;
 import com.lai.slinky.RecyclerView.DividerItemDecoration;
 import com.lai.slinky.RecyclerView.GeneralAdapter;
 import com.lai.slinky.RecyclerView.ObjectModel;
+import com.lai.slinky.activity.Club;
 import com.lai.slinky.localService;
 import com.lai.slinky.model.team;
 
@@ -29,8 +30,6 @@ import java.util.List;
 
 public class TwoFragment extends LazyFragment implements SwipeRefreshLayout.OnRefreshListener {
 
-    private TextView textView;
-    String mTitle;
     Context context = getActivity();
     private RecyclerView mRecyclerView;
     private ArrayList<ObjectModel> mData;
@@ -173,6 +172,18 @@ public class TwoFragment extends LazyFragment implements SwipeRefreshLayout.OnRe
         });
         */
 
+        //添加监听回调
+        mAdapter.setClickListener(new GeneralAdapter.ItemClickListener(){
+            @Override
+            public void OnItemClick(View view, int position) {
+                Log.e("-----Item clicked-----",String.valueOf(position));
+                Toast.makeText(getActivity(), "Item " + position + " clicked:", Toast.LENGTH_SHORT).show();
+                //跳转动作
+                Intent itoclub = new Intent(getActivity(), Club.class);
+                startActivity(itoclub);
+            }
+        });
+
     }
 
 
@@ -238,8 +249,5 @@ public class TwoFragment extends LazyFragment implements SwipeRefreshLayout.OnRe
         super.onDestroy();
         getActivity().unregisterReceiver(serviceReceiver);
     }
-
-
-
 
 }
