@@ -39,92 +39,175 @@ public class localService extends IntentService {
 
         Bundle bb = intent.getExtras();
         String[] strings = bb.getStringArray(StringArrayName);
+        String serviceSeclect = bb.getString("serviceSeclect");
         Log.e("----strings0----->",strings[0]);
         Log.e("----strings1----->",strings[1]);
+        Log.e("--serviceSeclect-->",serviceSeclect);
 
         List<team> listData = new ArrayList<team>();
         String[] teamtype = {"社团","班级"};
         ArrayList teamtitle = new ArrayList();
         ArrayList teaminfo = new ArrayList();
 
-        //试一下处理登陆操作时是否储存id和密码到strings
-//      String[] strings = msg.getData().getStringArray(StringArrayName);
-//      Util util = new Util();
-//      util.go();
-//      util.connSQL();
+        //先判断要求服务字符，选择对应的Service
+        if(serviceSeclect.equals("find_all_club")){
+            //查找数据库所有社团
 
-        Log.e("============strings[0]",strings[0]);
-        Log.e("==========strings[1]",strings[1]);
+            //试一下处理登陆操作时是否储存id和密码到strings
+//          String[] strings = msg.getData().getStringArray(StringArrayName);
+//          Util util = new Util();
+//          util.go();
+//          util.connSQL();
+            Log.e("============strings[0]",strings[0]);
+            Log.e("==========strings[1]",strings[1]);
 
-        String sql = "select PartyId from Slinky.UserParty_table where UserId = '" + strings[0] + "';";
-        ResultSet resultSet = util.selectSQL(sql);
-        int num = 0;//记录社团数目
-        // 最外层循环次数对应用户参加社团数目,resultSet从1开始
-        try{
-            while(resultSet.next()) {
-                String partyid = resultSet.getString("PartyId");
-                Log.e("----partyId----->",partyid);
-                //获得用户所参加的社团的社团名
-                String sql1 = "select PartyName from Slinky.Party_table where PartyId = '" + partyid + "';";
-                ResultSet resultSet1 = util.selectSQL(sql1);
+            //查找用户社团表，找出所有社团ID
+            String sql = "select PartyId from Slinky.UserParty_table;";
+            ResultSet resultSet = util.selectSQL(sql);
+            int num = 0;//记录社团数目
+            try{
+                while (resultSet.next()){
+                    //声明字符串获取每行得到的社团ID
+                    String partyid = resultSet.getString("PartyId");
+                    Log.e("----partyId----->",partyid);
+                    //获得每次得到的社团的社团名
+                    String sql1 = "select PartyName from Slinky.Party_table where PartyId = '" + partyid + "';";
+                    ResultSet resultSet1 = util.selectSQL(sql1);
 
-                //防止查不到数据，预先赋初值
-                teamtitle.add(num, "xx");
-                while (resultSet1.next()) {//该层循环次数对应用户参加社团的名字数目=最外层数目
-                    String partyname = resultSet1.getString("PartyName");
-                    Log.e("----partyName----->",partyname);
-                    //社团名字存储到teamtitle
-                    teamtitle.set(num, partyname);
+                    //防止查不到数据，预先赋初值
+                    teamtitle.add(num, "xx");
+                    while (resultSet1.next()) {//该层循环次数对应用户参加社团的名字数目=最外层数目
+                        String partyname = resultSet1.getString("PartyName");
+                        Log.e("----partyName----->",partyname);
+                        //社团名字存储到teamtitle
+                        teamtitle.set(num, partyname);
+                    }
+
+                    //获得用户所参加的社团的社长的userid
+                    String sql2 = "select UserId from Slinky.UserParty_table where PartyId = '" + partyid + "' AND PositionId = '10';";
+                    ResultSet resultSet2 = util.selectSQL(sql2);
+
+                    //防止查不到数据，预先赋初值
+                    teaminfo.add(num, "xx");
+                    while (resultSet2.next()) {//该层循环次数对应用户参加社团的社长名字数目=最外层数目
+                        String szuserid = resultSet2.getString("UserId");
+                        Log.e("----SZUserId---->",szuserid);
+                        //获得社长的名字
+                        String sql3 = "select NickName from Slinky.User_table where UserId = '" + szuserid + "';";
+                        ResultSet resultSet3 = util.selectSQL(sql3);
+
+                        resultSet3.next();
+                        String szname = resultSet3.getString("NickName");
+                        Log.e("----SZUserName---->",szname);
+                        //社长名字存储到teamtitle
+                        teaminfo.set(num, szname);
+                    }
+                    if(teamtitle.get(num).toString() != null && teaminfo.get(num).toString() != null)
+                        ta = new team(teamtitle.get(num).toString(), teamtype[0], teaminfo.get(num).toString());
+                    else if(teamtitle.get(num).toString() != null && teaminfo.get(num).toString() == null) //社长为空
+                        ta = new team(teamtitle.get(num).toString(), teamtype[0], "未定");
+                    else if(teamtitle.get(num).toString() == null) //社团名为空
+                        ta = new team("未定", teamtype[0], "未定");
+                    listData.add(ta);
+                    num++;
                 }
-
-
-                //获得用户所参加的社团的社长的userid
-                String sql2 = "select UserId from Slinky.UserParty_table where PartyId = '" + partyid + "' AND PositionId = '10';";
-                ResultSet resultSet2 = util.selectSQL(sql2);
-
-                //防止查不到数据，预先赋初值
-                teaminfo.add(num, "xx");
-                while (resultSet2.next()) {//该层循环次数对应用户参加社团的社长名字数目=最外层数目
-                    String szuserid = resultSet2.getString("UserId");
-                    Log.e("----SZUserId---->",szuserid);
-                    //获得社长的名字
-                    String sql3 = "select NickName from Slinky.User_table where UserId = '" + szuserid + "';";
-                    ResultSet resultSet3 = util.selectSQL(sql3);
-
-                    resultSet3.next();
-                    String szname = resultSet3.getString("NickName");
-                    Log.e("----SZUserName---->",szname);
-                    //社长名字存储到teamtitle
-                    teaminfo.set(num, szname);
-                }
-                if(teamtitle.get(num).toString() != null && teaminfo.get(num).toString() != null)
-                    ta = new team(teamtitle.get(num).toString(), teamtype[0], teaminfo.get(num).toString());
-                else if(teamtitle.get(num).toString() != null && teaminfo.get(num).toString() == null) //社长为空
-                    ta = new team(teamtitle.get(num).toString(), teamtype[0], "未定");
-                else if(teamtitle.get(num).toString() == null) //社团名为空
-                    ta = new team("未定", teamtype[0], "未定");
-                listData.add(ta);
-                num++;
+            }catch(Exception ex){
+                Log.e("==================","数据库错误");
+                ex.printStackTrace();
             }
-        }
-        catch(Exception ex){
-            Log.e("==================","数据库错误");
-            ex.printStackTrace();
-        }
-        Bundle teamBundle = new Bundle();
-        teamBundle.putInt("num",num);
-        teamBundle.putParcelableArrayList("teamtitle",teamtitle);
-        teamBundle.putStringArray("teamtype",teamtype);
-        teamBundle.putParcelableArrayList("teaminfo",teaminfo);
+            Bundle teamBundle = new Bundle();
+            teamBundle.putInt("num",num);
+            teamBundle.putParcelableArrayList("teamtitle",teamtitle);
+            teamBundle.putStringArray("teamtype",teamtype);
+            teamBundle.putParcelableArrayList("teaminfo",teaminfo);
 
-        //传送结果广播回UI,参数很关键，连接钥匙
-        Intent i1 = new Intent(TAG);
-        i1.putExtras(teamBundle);
-        sendBroadcast(i1);
-        Log.e("============>>>>","sendBroadcast");
+            //传送结果广播回UI,参数很关键，连接钥匙
+            Intent i1 = new Intent(TAG);
+            i1.putExtras(teamBundle);
+            sendBroadcast(i1);
+            Log.e("============>>>>","sendBroadcast");
 
-        //不必关闭连接，若关闭则若用户应用内二次进入出现bug。
+            //不必关闭连接，若关闭则若用户应用内二次进入出现bug。
 //          util.CloseConn();
+        }
+        else if(serviceSeclect.equals("find_own_club")){
+            //查找用户所加入社团
+            Log.e("============strings[0]",strings[0]);
+            Log.e("==========strings[1]",strings[1]);
+
+            String sql = "select PartyId from Slinky.UserParty_table where UserId = '" + strings[0] + "';";
+            ResultSet resultSet = util.selectSQL(sql);
+            int num = 0;//记录社团数目
+            // 最外层循环次数对应用户参加社团数目,resultSet从1开始
+            try{
+                while(resultSet.next()) {
+                    String partyid = resultSet.getString("PartyId");
+                    Log.e("----partyId----->",partyid);
+                    //获得用户所参加的社团的社团名
+                    String sql1 = "select PartyName from Slinky.Party_table where PartyId = '" + partyid + "';";
+                    ResultSet resultSet1 = util.selectSQL(sql1);
+
+                    //防止查不到数据，预先赋初值
+                    teamtitle.add(num, "xx");
+                    while (resultSet1.next()) {//该层循环次数对应用户参加社团的名字数目=最外层数目
+                        String partyname = resultSet1.getString("PartyName");
+                        Log.e("----partyName----->",partyname);
+                        //社团名字存储到teamtitle
+                        teamtitle.set(num, partyname);
+                    }
+
+
+                    //获得用户所参加的社团的社长的userid
+                    String sql2 = "select UserId from Slinky.UserParty_table where PartyId = '" + partyid + "' AND PositionId = '10';";
+                    ResultSet resultSet2 = util.selectSQL(sql2);
+
+                    //防止查不到数据，预先赋初值
+                    teaminfo.add(num, "xx");
+                    while (resultSet2.next()) {//该层循环次数对应用户参加社团的社长名字数目=最外层数目
+                        String szuserid = resultSet2.getString("UserId");
+                        Log.e("----SZUserId---->",szuserid);
+                        //获得社长的名字
+                        String sql3 = "select NickName from Slinky.User_table where UserId = '" + szuserid + "';";
+                        ResultSet resultSet3 = util.selectSQL(sql3);
+
+                        resultSet3.next();
+                        String szname = resultSet3.getString("NickName");
+                        Log.e("----SZUserName---->",szname);
+                        //社长名字存储到teamtitle
+                        teaminfo.set(num, szname);
+                    }
+                    if(teamtitle.get(num).toString() != null && teaminfo.get(num).toString() != null)
+                        ta = new team(teamtitle.get(num).toString(), teamtype[0], teaminfo.get(num).toString());
+                    else if(teamtitle.get(num).toString() != null && teaminfo.get(num).toString() == null) //社长为空
+                        ta = new team(teamtitle.get(num).toString(), teamtype[0], "未定");
+                    else if(teamtitle.get(num).toString() == null) //社团名为空
+                        ta = new team("未定", teamtype[0], "未定");
+                    listData.add(ta);
+                    num++;
+                }
+            }
+            catch(Exception ex){
+                Log.e("==================","数据库错误");
+                ex.printStackTrace();
+            }
+            Bundle teamBundle = new Bundle();
+            teamBundle.putInt("num",num);
+            teamBundle.putParcelableArrayList("teamtitle",teamtitle);
+            teamBundle.putStringArray("teamtype",teamtype);
+            teamBundle.putParcelableArrayList("teaminfo",teaminfo);
+
+            //传送结果广播回UI,参数很关键，连接钥匙
+            Intent i1 = new Intent(TAG);
+            i1.putExtras(teamBundle);
+            sendBroadcast(i1);
+            Log.e("============>>>>","sendBroadcast");
+
+            //不必关闭连接，若关闭则若用户应用内二次进入出现bug。
+//          util.CloseConn();
+        }
+        else{
+            Log.e("!!!!!!!!!!","cant find current service");
+        }
     }
 
     //通过继承binder来实现IBinder类

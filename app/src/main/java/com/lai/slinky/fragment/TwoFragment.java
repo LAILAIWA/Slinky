@@ -119,10 +119,12 @@ public class TwoFragment extends LazyFragment implements SwipeRefreshLayout.OnRe
         serviceReceiver = new ServiceReceiver();
 
         String[] userInfo = this.getActivity().getIntent().getStringArrayExtra("userInfo");
+        String serviceSeclect = "find_all_club";
         Intent intent = new Intent(this.getActivity(),localService.class);
 
         Bundle b0 = new Bundle();
         b0.putStringArray("userInfo", userInfo);
+        b0.putString("serviceSeclect", serviceSeclect);
         intent.putExtras(b0);
 
         //创建IntentFilter
@@ -247,6 +249,7 @@ public class TwoFragment extends LazyFragment implements SwipeRefreshLayout.OnRe
     public void onDestroy()
     {
         super.onDestroy();
+        //注意不要漏写
         getActivity().unregisterReceiver(serviceReceiver);
     }
 
