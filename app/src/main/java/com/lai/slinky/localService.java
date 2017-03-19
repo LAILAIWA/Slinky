@@ -2,11 +2,17 @@ package com.lai.slinky;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
 
 import com.lai.slinky.model.team;
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.sql.Blob;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +25,11 @@ public class localService extends IntentService {
     //这里我用IntentService，不用另外建新线程，也不用处理service何时关闭
 
     public static final String TAG = "com.lai.slinky.fragment.shetuanservice";
+    public static final String TAG1 = "com.lai.slinky.activity.Club.shetuanservice";
+    static final String StringSeclectInfo = "serviceSeclect";
     static final String StringArrayName = "userInfo";
+    static final String StringClubInfo = "clubInfo";
+
     Util util = new Util();
     team ta = new team();
 //    private int count;
@@ -38,11 +48,7 @@ public class localService extends IntentService {
         util.connSQL();
 
         Bundle bb = intent.getExtras();
-        String[] strings = bb.getStringArray(StringArrayName);
-        String serviceSeclect = bb.getString("serviceSeclect");
-        Log.e("----strings0----->",strings[0]);
-        Log.e("----strings1----->",strings[1]);
-        Log.e("--serviceSeclect-->",serviceSeclect);
+        String serviceSeclect = bb.getString(StringSeclectInfo);
 
         List<team> listData = new ArrayList<team>();
         String[] teamtype = {"社团","班级"};
@@ -53,6 +59,11 @@ public class localService extends IntentService {
         if(serviceSeclect.equals("find_all_club")){
             //查找数据库所有社团
 
+            String[] strings = bb.getStringArray(StringArrayName);
+            Log.e("----strings0----->",strings[0]);
+            Log.e("----strings1----->",strings[1]);
+            Log.e("--serviceSeclect-->",serviceSeclect);
+
             //试一下处理登陆操作时是否储存id和密码到strings
 //          String[] strings = msg.getData().getStringArray(StringArrayName);
 //          Util util = new Util();
@@ -62,7 +73,7 @@ public class localService extends IntentService {
             Log.e("==========strings[1]",strings[1]);
 
             //查找用户社团表，找出所有社团ID
-            String sql = "select PartyId from Slinky.UserParty_table;";
+            String sql = "select PartyId from Slinky.Party_table;";
             ResultSet resultSet = util.selectSQL(sql);
             int num = 0;//记录社团数目
             try{
@@ -132,6 +143,11 @@ public class localService extends IntentService {
         }
         else if(serviceSeclect.equals("find_own_club")){
             //查找用户所加入社团
+            String[] strings = bb.getStringArray(StringArrayName);
+            Log.e("----strings0----->",strings[0]);
+            Log.e("----strings1----->",strings[1]);
+            Log.e("--serviceSeclect-->",serviceSeclect);
+
             Log.e("============strings[0]",strings[0]);
             Log.e("==========strings[1]",strings[1]);
 
@@ -205,6 +221,89 @@ public class localService extends IntentService {
             //不必关闭连接，若关闭则若用户应用内二次进入出现bug。
 //          util.CloseConn();
         }
+        else if(serviceSeclect.equals("find_club_info")){
+            //查找用户社团表，找出所有社团ID
+
+            String partyMemo = "";
+            Bitmap partyLogo = ((BitmapDrawable) getResources().getDrawable(R.drawable.icon_club)).getBitmap();
+            byte[] plb = new byte[10240];
+
+            //先取出请求者发送的社团基本信息
+            Bundle bbb = intent.getExtras();
+            String clubString = bbb.getString(StringClubInfo);
+            Log.e("---clubString---->",clubString);//社团名
+
+            //根据社团名，找到社团信息
+            String sql ="select Logo,Memo from Slinky.Party_table where PartyName = '" + clubString + "';";
+            ResultSet resultSet = util.selectSQL(sql);
+            try{
+                Log.e("resultRowNum",String.valueOf(resultSet.getRow()));
+                while (resultSet.next()){
+                    partyMemo = resultSet.getString("Memo");
+                    Log.e("partyMemo: ",partyMemo);
+                    //获取数据库Logo Blob数据
+                    Blob blob = resultSet.getBlob("Logo");
+                    //声明输入输出流
+
+                    ByteArrayOutputStream os = new ByteArrayOutputStream();
+                    InputStream is = blob.getBinaryStream();
+                    Bitmap bitmap = BitmapFactory.decodeStream(is);
+                    bitmap.compress(Bitmap.CompressFormat.PNG,100,os);//将图片百分百高质量压缩入流
+                    plb = os.toByteArray();//将输出流赋予字节流
+
+//                    int len = 0;
+//                    while ((len = is.read(plb))!= -1){
+//                        os.write(plb,0,len);
+//                        os.flush();
+//                    }
+                    //关闭输入输出流
+                    os.close();
+                    is.close();
+
+                    //转化为Bitmap，不用转化了，直接传送byte字节流
+//                    partyLogo = BitmapFactory.decodeByteArray(plb,0,plb.length);
+                    Log.e("----Blob To byte--->","Bitmap");
+
+                    //防止查不到数据，预先赋初值
+//                    Bitmap partyLogoNum0 = ((BitmapDrawable) getResources().getDrawable(R.drawable.icon_club)).getBitmap();
+//                    partyLogoList.add(num,partyLogoNum0);
+
+
+                    if(partyLogo != null && partyMemo != null)
+                        ta = new team(partyMemo,partyLogo);
+                    else if(partyLogo != null && partyMemo == null) //社团简介为空
+                        ta = new team("", partyLogo);
+                    else if(partyLogo == null && partyMemo != null) //社团头像为空
+                        ta = new team(partyMemo, ((BitmapDrawable) getResources().getDrawable(R.drawable.icon_club)).getBitmap());
+                    else if(partyLogo == null && partyMemo == null) //社团头像,简介皆为空
+                        ta = new team("", ((BitmapDrawable) getResources().getDrawable(R.drawable.icon_club)).getBitmap());
+                    listData.add(ta);
+                }
+            }catch(Exception ex){
+                Log.e("==================","数据库错误");
+                ex.printStackTrace();
+            }
+            //加工ArrayList<>用于bundle传输
+            ArrayList bl = new ArrayList();
+            bl.add(listData);
+
+            Bundle teamBundle = new Bundle();
+            teamBundle.putParcelableArrayList("teamLogoMemo",bl);
+            teamBundle.putString("partyMemo",partyMemo);
+            teamBundle.putByteArray("partyLogo",plb);
+            //直接用intent传递Bitmap，不能超过40K，否则会程序崩溃
+//            teamBundle.putParcelable("partyLogo",partyLogo);
+
+            Log.e("============>>>>","sendBroadcast");
+            //传送结果广播回UI,参数很关键，连接钥匙
+            Intent i1 = new Intent(TAG1);
+            i1.putExtras(teamBundle);
+            sendBroadcast(i1);
+
+
+            //不必关闭连接，若关闭则若用户应用内二次进入出现bug。
+//          util.CloseConn();
+        }
         else{
             Log.e("!!!!!!!!!!","cant find current service");
         }
@@ -250,6 +349,7 @@ public class localService extends IntentService {
     //Service被断开连接时回调该方法
     @Override
     public boolean onUnbind(Intent intent) {
+        Log.e("->->->->->->->","Service is OnUnbinded");
         return super.onUnbind(intent);
     }
 
@@ -259,4 +359,5 @@ public class localService extends IntentService {
         super.onDestroy();
         Log.e("->->->->->->->","Service is Destroyed");
     }
+
 }

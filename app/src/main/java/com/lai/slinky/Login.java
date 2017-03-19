@@ -80,6 +80,7 @@ public class Login extends Activity{
                                 //登陆成功，跳转
                                 Intent i = new Intent(Login.this, MainFace.class);
                                 i.putExtras(bundlee);
+
                                 startActivity(i);
                             }
                             else{
@@ -108,7 +109,6 @@ public class Login extends Activity{
         //启动新线程，要先让线程处于就绪状态
         final JDBCThread JThread = new JDBCThread();
         JThread.start();
-
         findViewById(R.id.bnLogin).setOnClickListener(new View.OnClickListener(){
             //登陆事件
             @Override
@@ -133,7 +133,7 @@ public class Login extends Activity{
                     JThread.mainHandler.sendMessage(msg);
                 }
                 catch(Exception ex){
-                    Toast.makeText(getApplicationContext(),"未知错误，抱歉",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"请稍候重试，抱歉",Toast.LENGTH_SHORT).show();
                     Log.e("==================","操作错误");
                     ex.printStackTrace();
                 }

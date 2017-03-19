@@ -180,8 +180,18 @@ public class TwoFragment extends LazyFragment implements SwipeRefreshLayout.OnRe
             public void OnItemClick(View view, int position) {
                 Log.e("-----Item clicked-----",String.valueOf(position));
                 Toast.makeText(getActivity(), "Item " + position + " clicked:", Toast.LENGTH_SHORT).show();
+
+                team ta = listData.get(position);
+                Bundle bb = new Bundle();
+                bb.putString("teamtitle",ta.getTitle());
+                bb.putString("teamtype",ta.getType());
+                bb.putString("teaminfo",ta.getCharge1());
+                Log.e("--ItemToClub title--",String.valueOf(ta.getTitle()));
+                Log.e("--ItemToClub type--",String.valueOf(ta.getType()));
+                Log.e("--ItemToClub info--",String.valueOf(ta.getCharge1()));
                 //跳转动作
                 Intent itoclub = new Intent(getActivity(), Club.class);
+                itoclub.putExtras(bb);
                 startActivity(itoclub);
             }
         });
@@ -213,11 +223,10 @@ public class TwoFragment extends LazyFragment implements SwipeRefreshLayout.OnRe
     @Override
     public void onRefresh() {
         if (refreshByBottom) {
-
             swipeRefreshLayout.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    //通过广播与Service保持通信
+
                     swipeRefreshLayout.setRefreshing(false);
                     Snackbar.make(swipeRefreshLayout,"底部刷新",Snackbar.LENGTH_SHORT).show();
                     refreshByBottom = false;
@@ -227,6 +236,9 @@ public class TwoFragment extends LazyFragment implements SwipeRefreshLayout.OnRe
             swipeRefreshLayout.postDelayed(new Runnable() {
                 @Override
                 public void run() {
+
+                    Log.e("----Refresh up----","ooo");
+
                     swipeRefreshLayout.setRefreshing(false);
                     Snackbar.make(swipeRefreshLayout,"顶部刷新",Snackbar.LENGTH_SHORT).show();
                 }

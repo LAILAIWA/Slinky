@@ -1,5 +1,6 @@
 package com.lai.slinky.model;
 
+import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -7,12 +8,13 @@ import android.os.Parcelable;
  * Created by Administrator on 2017/3/5.
  */
 public class team implements Parcelable {
-    public String title;
-    public String type;
-    public String charge1;
-    public String charge2;
-    public String info;
-    public String place;
+    private String title;
+    private String type;
+    private String charge1;
+    private String charge2;
+    private String info;
+    private String place;
+    private Bitmap partyLogo;
     public team(){
     }
     public team(String title,String type,String charge1){
@@ -20,6 +22,11 @@ public class team implements Parcelable {
         this.type = type;
         this.charge1 = charge1;
     }
+    public team(String info,Bitmap partyLogo){
+        this.info = info;
+        this.partyLogo = partyLogo;
+    }
+
 
     public void setTitle(String title) {
         this.title = title;
@@ -45,6 +52,10 @@ public class team implements Parcelable {
         this.place = place;
     }
 
+    public void setPartyLogo(Bitmap partyLogo) {
+        this.partyLogo = partyLogo;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -67,6 +78,10 @@ public class team implements Parcelable {
 
     public String getPlace() {
         return place;
+    }
+
+    public Bitmap getPartyLogo() {
+        return partyLogo;
     }
 
     @Override

@@ -35,9 +35,9 @@ public class GeneralAdapter extends RecyclerView.Adapter<GeneralAdapter.MyViewHo
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         //为holde设置指定数据,将数据绑定到每一个childView中
         team tdata = mDatas.get(position);
-        holder.tvTeamTitle.setText(tdata.title);
-        holder.tvTeamInfo.setText(tdata.charge1);
-        holder.tvTeamType.setText(tdata.type);
+        holder.tvTeamTitle.setText(tdata.getTitle());
+        holder.tvTeamInfo.setText(tdata.getCharge1());
+        holder.tvTeamType.setText(tdata.getType());
 
         //创建view时添加监听事件
         if(ClickListener != null){
