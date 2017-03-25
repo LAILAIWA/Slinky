@@ -39,6 +39,7 @@ public class TwoFragment extends LazyFragment implements SwipeRefreshLayout.OnRe
     private SwipeRefreshLayout swipeRefreshLayout;
     private boolean refreshByBottom = false;
     String[] teamtype = {"社团","班级"};
+    ArrayList teamid = new ArrayList();
     ArrayList teamtitle = new ArrayList();
     ArrayList teaminfo = new ArrayList();
     List<team> listData = new ArrayList<team>();
@@ -88,6 +89,8 @@ public class TwoFragment extends LazyFragment implements SwipeRefreshLayout.OnRe
         @Override
         public void onReceive(Context context, Intent intent) {
             //获取Intent中的消息
+            teamid = intent.getIntegerArrayListExtra("teamid");
+            Log.e("============>>>>","getteamid");
             teamtitle = intent.getParcelableArrayListExtra("teamtitle");
             Log.e("============>>>>","getteamtitle");
             teamtype = intent.getStringArrayExtra("teamtype");
@@ -100,7 +103,7 @@ public class TwoFragment extends LazyFragment implements SwipeRefreshLayout.OnRe
             listData.clear();
 
             for (int i = 0; i < num; i++) {
-                team ta = new team(teamtitle.get(i).toString(),teamtype[0],teaminfo.get(i).toString());
+                team ta = new team((int)teamid.get(i),teamtitle.get(i).toString(),teamtype[0],teaminfo.get(i).toString());
                 listData.add(ta);
             }
 
@@ -183,9 +186,11 @@ public class TwoFragment extends LazyFragment implements SwipeRefreshLayout.OnRe
 
                 team ta = listData.get(position);
                 Bundle bb = new Bundle();
+                bb.putInt("teamid",ta.getId());
                 bb.putString("teamtitle",ta.getTitle());
                 bb.putString("teamtype",ta.getType());
                 bb.putString("teaminfo",ta.getCharge1());
+                Log.e("--ItemToClub title--",String.valueOf(ta.getId()));
                 Log.e("--ItemToClub title--",String.valueOf(ta.getTitle()));
                 Log.e("--ItemToClub type--",String.valueOf(ta.getType()));
                 Log.e("--ItemToClub info--",String.valueOf(ta.getCharge1()));

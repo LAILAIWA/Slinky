@@ -8,6 +8,7 @@ import android.os.Parcelable;
  * Created by Administrator on 2017/3/5.
  */
 public class team implements Parcelable {
+    private int id;
     private String title;
     private String type;
     private String charge1;
@@ -17,7 +18,8 @@ public class team implements Parcelable {
     private Bitmap partyLogo;
     public team(){
     }
-    public team(String title,String type,String charge1){
+    public team(int id,String title,String type,String charge1){
+        this.id = id;
         this.title = title;
         this.type = type;
         this.charge1 = charge1;
@@ -27,6 +29,9 @@ public class team implements Parcelable {
         this.partyLogo = partyLogo;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public void setTitle(String title) {
         this.title = title;
@@ -54,6 +59,10 @@ public class team implements Parcelable {
 
     public void setPartyLogo(Bitmap partyLogo) {
         this.partyLogo = partyLogo;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getTitle() {

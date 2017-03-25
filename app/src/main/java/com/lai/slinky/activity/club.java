@@ -24,9 +24,11 @@ import java.util.List;
  */
 public class Club extends Activity {
     public String teamtitle,teamtype,teaminfo;
+    public int teamid;
     ServiceReceiver serviceReceiver = new ServiceReceiver();
     static final String StringSeclectInfo = "serviceSeclect";
     static final String StringClubInfo = "clubInfo";
+    static final String StringClubId = "clubId";
     List<team> listData = new ArrayList<team>();
     public static final String TAG = "com.lai.slinky.activity.Club.shetuanservice";
 
@@ -38,6 +40,7 @@ public class Club extends Activity {
         TextView club_president_name = (TextView) findViewById(R.id.club_president_name);
 
 
+        teamid = getIntent().getIntExtra("teamid",-1);//后一个参数：若没取到赋值-1
         teamtitle = getIntent().getStringExtra("teamtitle");
         teamtype = getIntent().getStringExtra("teamtype");
         teaminfo = getIntent().getStringExtra("teaminfo");
@@ -53,6 +56,7 @@ public class Club extends Activity {
 
         Bundle b0 = new Bundle();
         //传送社团名，用于查找相关信息,选择查找社团信息服务
+        b0.putInt(StringClubId,teamid);
         b0.putString(StringClubInfo, teamtitle);
         b0.putString(StringSeclectInfo, "find_club_info");
         intent.putExtras(b0);

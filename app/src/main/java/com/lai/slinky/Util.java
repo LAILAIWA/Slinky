@@ -46,7 +46,7 @@ public class Util {
 
     //连接MySQL
     public void connSQL() {//连接数据库
-        String url = "jdbc:mysql://181.214.62.239:3306/Slinky";
+        String url = "jdbc:mysql://181.214.62.239:3306/Slinky?useUnicode=true&characterEncoding=UTF-8";
 //        String url = "jdbc:mysql://localhost:33104/Slinky";
         String username = "teamuser2";
         String password = "123";
@@ -83,7 +83,7 @@ public class Util {
             rs = ps.executeQuery(sql);
         }
         catch(SQLException ex){
-            Log.e("----------","查找失败");
+            Log.e("----------","查找失败");///////////////
             ex.printStackTrace();
         }
         return rs;
