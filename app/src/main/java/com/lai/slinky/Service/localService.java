@@ -1,4 +1,4 @@
-package com.lai.slinky;
+package com.lai.slinky.Service;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -8,6 +8,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.lai.slinky.R;
+import com.lai.slinky.Util;
 import com.lai.slinky.model.team;
 
 import java.io.ByteArrayOutputStream;
@@ -24,12 +26,18 @@ public class localService extends IntentService {
     //Service是运行在子线程的 而IntentService的onHandleIntent则是另外开启一个新的线程
     //这里我用IntentService，不用另外建新线程，也不用处理service何时关闭
 
+    //包含三个服务
+    // 1.查询数据库所有社团
+    // 2.查询用户所参加社团
+    // 3.查询某个社团信息
+
     public static final String TAG = "com.lai.slinky.fragment.shetuanservice";
     public static final String TAG1 = "com.lai.slinky.activity.Club.shetuanservice";
     static final String StringSeclectInfo = "serviceSeclect";
     static final String StringArrayName = "userInfo";
     static final String StringClubInfo = "clubInfo";
     static final String StringClubId = "clubId";
+    static final String StringUserInfo = "userinfo";
 
     Util util = new Util();
     team ta = new team();
@@ -181,9 +189,9 @@ public class localService extends IntentService {
                         teamtitle.set(num, partyname);
                     }
 
-
                     //获得用户所参加的社团的社长的userid
-                    String sql2 = "select UserId from Slinky.UserParty_table where PartyId = '" + partyid + "' AND PositionId = '10';";
+                    //对应权限ID 1-管理员 2-社长 3-副社长
+                    String sql2 = "select UserId from Slinky.UserParty_table where PartyId = '" + partyid + "' AND PermissionId = '2';";
                     ResultSet resultSet2 = util.selectSQL(sql2);
 
                     //防止查不到数据，预先赋初值
@@ -231,8 +239,10 @@ public class localService extends IntentService {
 //          util.CloseConn();
         }
         else if(serviceSeclect.equals("find_club_info")){
-            //查找用户社团表，找出所有社团ID
+            //查找社团logo,memo等信息，并查询是否用户拥有管理权限,社长副社长皆可
 
+            int ifHasPermission = -1;
+            //初始化社团信息
             String partyMemo = "";
             Bitmap partyLogo = ((BitmapDrawable) getResources().getDrawable(R.drawable.icon_club)).getBitmap();
             byte[] plb = new byte[10240];
@@ -243,6 +253,35 @@ public class localService extends IntentService {
             Log.e("---clubString---->",String.valueOf(clubId));//社团ID
             String clubString = bbb.getString(StringClubInfo);
             Log.e("---clubString---->",clubString);//社团名
+            //获得用户信息用于查询权限
+            String[] userinfo = bbb.getStringArray(StringUserInfo);
+            Log.e("---userId---->",userinfo[0]);//用户Id
+
+            //首先，查询用户是否有管理社团权限
+            String sql0 ="select UserId,PermissionId from Slinky.UserParty_table where PartyId = '" + clubId + "';";
+            ResultSet resultSet0 = util.selectSQL(sql0);
+            try{
+                while (resultSet0.next()) {
+                    String getUserId = resultSet0.getString("UserId");
+                    Log.e("---getUserId---->",getUserId);
+                    String getPermissionId = resultSet0.getString("PermissionId");
+                    Log.e("---getPermissionId---->",getPermissionId);//用户Id
+                    if(userinfo[0].equals(getUserId)){
+                        Log.e("--getUserIdTo--->","ok");
+                        if(getPermissionId.equals("1")) {
+                            Log.e("--Permission--->","ok");
+                            ifHasPermission = 1;
+                        }
+                        else if(getPermissionId.equals("2"))
+                            ifHasPermission = 1;
+                        else if(getPermissionId.equals("3"))
+                            ifHasPermission = 1;
+                    }
+                }
+            }catch (Exception ex){
+                Log.e("==================","数据库错误");
+                ex.printStackTrace();
+            }
 
             //根据社团ID，找到社团信息
             String sql ="select Logo,Memo from Slinky.Party_table where PartyId = '" + clubId + "';";
@@ -304,6 +343,7 @@ public class localService extends IntentService {
             bl.add(listData);
 
             Bundle teamBundle = new Bundle();
+            teamBundle.putInt("permission",ifHasPermission);
             teamBundle.putParcelableArrayList("teamLogoMemo",bl);
             teamBundle.putString("partyMemo",partyMemo);
             teamBundle.putByteArray("partyLogo",plb);

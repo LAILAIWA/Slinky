@@ -87,6 +87,16 @@
                         android:textColor="@color/colorBlack"
                         android:textSize="20sp"
                         />
+                    <Button
+                        android:id="@+id/club_manage_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="80dp"
+                        android:layout_toEndOf="@id/club_president_name"
+                        android:text="社团管理"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="15sp"
+                        android:background="@drawable/corners_btn_black"/>
                 </RelativeLayout>
             </TableRow>
         </TableLayout>
@@ -177,7 +187,7 @@
             <TableRow>
                 <RelativeLayout>
                     <Button
-                        android:id="@+id/club_apply"
+                        android:id="@+id/club_activity_btn"
                         android:layout_width="100dp"
                         android:layout_height="50dp"
                         android:layout_marginTop="20dp"
@@ -188,10 +198,10 @@
                         android:textSize="15sp"
                         android:background="@drawable/corners_btn_black"/>
                     <Button
-                        android:id="@+id/club_hhsda"
+                        android:id="@+id/club_notice_btn"
                         android:layout_width="100dp"
                         android:layout_height="50dp"
-                        android:layout_toEndOf="@id/club_apply"
+                        android:layout_toEndOf="@id/club_activity_btn"
                         android:layout_marginTop="20dp"
                         android:layout_marginStart="5dp"
                         android:layout_marginEnd="5dp"
@@ -204,7 +214,7 @@
             <TableRow>
                 <RelativeLayout>
                     <Button
-                        android:id="@+id/club_hh"
+                        android:id="@+id/club_apply_btn"
                         android:layout_width="100dp"
                         android:layout_height="50dp"
                         android:layout_marginTop="10dp"
@@ -214,10 +224,10 @@
                         android:textSize="15sp"
                         android:background="@drawable/corners_btn_black"/>
                     <Button
-                        android:id="@+id/club_hhh"
+                        android:id="@+id/club_quit_btn"
                         android:layout_width="100dp"
                         android:layout_height="50dp"
-                        android:layout_toEndOf="@id/club_hh"
+                        android:layout_toEndOf="@id/club_apply_btn"
                         android:layout_marginTop="10dp"
                         android:layout_marginStart="10dp"
                         android:text="退社申请"

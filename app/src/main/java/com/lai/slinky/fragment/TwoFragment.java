@@ -22,7 +22,7 @@ import com.lai.slinky.RecyclerView.DividerItemDecoration;
 import com.lai.slinky.RecyclerView.GeneralAdapter;
 import com.lai.slinky.RecyclerView.ObjectModel;
 import com.lai.slinky.activity.Club;
-import com.lai.slinky.localService;
+import com.lai.slinky.Service.localService;
 import com.lai.slinky.model.team;
 
 import java.util.ArrayList;
@@ -38,6 +38,7 @@ public class TwoFragment extends LazyFragment implements SwipeRefreshLayout.OnRe
     private RecyclerView.LayoutManager mLayoutManager;
     private SwipeRefreshLayout swipeRefreshLayout;
     private boolean refreshByBottom = false;
+    String[] userInfo;
     String[] teamtype = {"社团","班级"};
     ArrayList teamid = new ArrayList();
     ArrayList teamtitle = new ArrayList();
@@ -120,11 +121,12 @@ public class TwoFragment extends LazyFragment implements SwipeRefreshLayout.OnRe
     public void initData(@Nullable Bundle savedInstanceState) {
         //通过广播与Service保持通信
         serviceReceiver = new ServiceReceiver();
-
-        String[] userInfo = this.getActivity().getIntent().getStringArrayExtra("userInfo");
+        //接收用户信息
+        userInfo = this.getActivity().getIntent().getStringArrayExtra("userInfo");
+        //声明所选服务功能
         String serviceSeclect = "find_all_club";
+        //传递用户信息用于数据库查询
         Intent intent = new Intent(this.getActivity(),localService.class);
-
         Bundle b0 = new Bundle();
         b0.putStringArray("userInfo", userInfo);
         b0.putString("serviceSeclect", serviceSeclect);
@@ -186,6 +188,7 @@ public class TwoFragment extends LazyFragment implements SwipeRefreshLayout.OnRe
 
                 team ta = listData.get(position);
                 Bundle bb = new Bundle();
+                bb.putStringArray("userinfo",userInfo);//用户信息还需在查询权限用到
                 bb.putInt("teamid",ta.getId());
                 bb.putString("teamtitle",ta.getTitle());
                 bb.putString("teamtype",ta.getType());
