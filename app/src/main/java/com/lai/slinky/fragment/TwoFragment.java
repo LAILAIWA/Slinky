@@ -117,6 +117,7 @@ public class TwoFragment extends LazyFragment implements SwipeRefreshLayout.OnRe
         }
     }
 
+
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
         //通过广播与Service保持通信

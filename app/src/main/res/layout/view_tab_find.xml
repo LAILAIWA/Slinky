@@ -7,18 +7,18 @@
     <ImageView
         android:layout_width="36dp"
         android:layout_height="36dp"
-        android:id="@+id/iv_title"
+        android:id="@+id/iv_title_find"
         android:scaleType="centerCrop"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/tab_msg_iv_selector"/>
+        android:background="@drawable/tab_find_iv_selector"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="new text"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/iv_title"
-        android:id="@+id/tv_title"
+        android:layout_below="@+id/iv_title_find"
+        android:id="@+id/tv_title_find"
         android:textColor="@drawable/tab_selector"/>
-
 
 </RelativeLayout>

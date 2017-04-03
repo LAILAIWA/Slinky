@@ -25,6 +25,7 @@ import java.util.List;
  */
 public class Club extends Activity {
     public String teamtitle,teamtype,teaminfo;
+    String partyInfo;
     public int teamid;
     public int ifHasPermission = 0;
     String[] userinfo;
@@ -32,7 +33,8 @@ public class Club extends Activity {
     //0标识还未得到结果，-1标识结果为非，1标识结果为真
     ServiceReceiver serviceReceiver = new ServiceReceiver();
     static final String StringSeclectInfo = "serviceSeclect";
-    static final String StringClubInfo = "clubInfo";
+    static final String StringClubName = "clubInfo";
+    static final String StringPartyInfo= "partyInfo";
     static final String StringClubId = "clubId";
     static final String StringUserInfo = "userinfo";
     List<team> listData = new ArrayList<team>();
@@ -65,10 +67,10 @@ public class Club extends Activity {
         Intent intent = new Intent(this,localService.class);
 
         //传送社团标识信息，用于查找相关信息,选择查找社团信息服务
-        Bundle b0 = new Bundle();
+        final Bundle b0 = new Bundle();
         b0.putStringArray(StringUserInfo,userinfo);
         b0.putInt(StringClubId,teamid);
-        b0.putString(StringClubInfo, teamtitle);
+        b0.putString(StringClubName, teamtitle);
         b0.putString(StringSeclectInfo, serviceSeclect);
         intent.putExtras(b0);
 
@@ -94,6 +96,7 @@ public class Club extends Activity {
                 if(ifHasPermission == 0){
                     //还未查到，提示
                     Log.e("============>>>>","还未查到");
+
                 }
                 else if(ifHasPermission == -1){
                     //结果为非，提示用户没有权限
@@ -102,6 +105,12 @@ public class Club extends Activity {
                 else{
                     //用户拥有权限，跳转并传递基本信息
                     Log.e("============>>>>","有权限");
+
+                    //将社团信息录入
+                    b0.putString(StringPartyInfo,partyInfo);
+                    Intent i = new Intent(Club.this,ClubManager.class);
+                    i.putExtras(b0);
+                    startActivity(i);
                 }
             }
         });
@@ -112,6 +121,7 @@ public class Club extends Activity {
         findViewById(R.id.club_activity_btn).setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+                //跳转并传递基本信息
 
             }
         });
@@ -122,6 +132,7 @@ public class Club extends Activity {
         findViewById(R.id.club_notice_btn).setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+                //跳转并传递基本信息
 
             }
         });
@@ -132,6 +143,7 @@ public class Club extends Activity {
         findViewById(R.id.club_apply_btn).setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+                //跳转并传递基本信息
 
             }
         });
@@ -159,7 +171,7 @@ public class Club extends Activity {
 //            //强制转换
 //            ArrayList al = intent.getParcelableArrayListExtra("teamLogoMemo");
 //            listData = (List<team>) al;
-            String partyInfo = intent.getStringExtra("partyMemo");
+            partyInfo = intent.getStringExtra("partyMemo");
 
             //直接用intent传递Bitmap，不能超过40K，否则会程序崩溃,所以改为传递字节流
             //            Bitmap partyLogoBm = intent.getParcelableExtra("partyLogo");

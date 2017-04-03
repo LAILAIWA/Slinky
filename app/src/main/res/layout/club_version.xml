@@ -135,6 +135,7 @@
                         android:layout_toEndOf="@id/club_cici"
                         android:layout_marginTop="5dp"
                         android:layout_marginStart="20dp"
+                        android:layout_marginEnd="20dp"
                         android:background="@drawable/corners_black"
                         app:layout_behavior="@string/appbar_scrolling_view_behavior">
                         <TextView
@@ -168,6 +169,7 @@
                         android:layout_toEndOf="@id/club_mnmn"
                         android:layout_marginTop="25dp"
                         android:layout_marginStart="20dp"
+                        android:layout_marginEnd="20dp"
                         android:background="@drawable/corners_black"
                         app:layout_behavior="@string/appbar_scrolling_view_behavior">
                         <TextView
@@ -235,6 +237,21 @@
                         android:textSize="15sp"
                         android:background="@drawable/corners_btn_black"/>
                 </RelativeLayout>
+            </TableRow>
+            <TableRow>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    >
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/colorWhite"
+                        android:text=""
+                        android:textColor="@color/colorBlack"
+                        android:textSize="15sp"/>
+                </LinearLayout>
+
             </TableRow>
         </TableLayout>
     </FrameLayout>

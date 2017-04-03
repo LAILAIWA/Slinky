@@ -40,12 +40,23 @@
             android:label=""
             android:launchMode="singleInstance">
         </activity>
+        <activity
+            android:name=".activity.ClubManager"
+            android:label=""
+            android:launchMode="singleInstance">
+        </activity>
         <service
             android:name=".Service.localService">
             <intent-filter>
                 <action android:name="com.lai.slinky.localService"/>  
             </intent-filter> 
-        </service>  
+        </service> 
+        <service
+            android:name=".Service.ClubService">
+            <intent-filter>
+                <action android:name="com.lai.slinky.ClubService"/>  
+            </intent-filter> 
+        </service> 
     </application>
 
 </manifest>

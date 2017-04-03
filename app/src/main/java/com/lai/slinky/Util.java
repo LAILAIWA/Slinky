@@ -89,7 +89,7 @@ public class Util {
         return rs;
     }
 
-    public boolean insertSQL(String sql){//查找操作
+    public boolean insertSQL(String sql){//插入操作
         boolean b = false;
         try{
             ps = conn.createStatement();
@@ -102,6 +102,23 @@ public class Util {
         }
         catch (Exception exx){
             Log.e("----------","插入失败");
+            exx.printStackTrace();
+        }
+        return b;
+    }
+    public boolean updateSQL(String sql){//修改操作
+        boolean b = false;
+        try{
+            ps = conn.createStatement();
+            ps.executeUpdate(sql);
+            return true;
+        }
+        catch(SQLException ex){
+            Log.e("----------","修改数据库失败");
+            ex.printStackTrace();
+        }
+        catch (Exception exx){
+            Log.e("----------","修改失败");
             exx.printStackTrace();
         }
         return b;

@@ -26,10 +26,15 @@ public class localService extends IntentService {
     //Service是运行在子线程的 而IntentService的onHandleIntent则是另外开启一个新的线程
     //这里我用IntentService，不用另外建新线程，也不用处理service何时关闭
 
+    //之前的做法有点太耗费时间，待用户操作后再执行后台服务，不如直接在后台将能进行的操作预先完成
+
     //包含三个服务
     // 1.查询数据库所有社团
     // 2.查询用户所参加社团
     // 3.查询某个社团信息
+
+    //这三个服务所需要的必要信息分别为1.无 2.用户ID（该服务是专用服务，另外模块调用） 3.社团ID，用户ID
+    //所以可调整，服务一提前执行，服务三先查好用户ID需查信息
 
     public static final String TAG = "com.lai.slinky.fragment.shetuanservice";
     public static final String TAG1 = "com.lai.slinky.activity.Club.shetuanservice";

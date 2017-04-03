@@ -107,6 +107,7 @@ public abstract class LazyFragment extends Fragment {
 
     public abstract void initData(@Nullable Bundle savedInstanceState);
 
+    //在当Activity中的onCreate方法执行完后调用
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);

@@ -7,7 +7,7 @@
     <ImageView
         android:layout_width="36dp"
         android:layout_height="36dp"
-        android:id="@+id/iv_title"
+        android:id="@+id/view_tab_clubm_activity_iv_title"
         android:scaleType="centerCrop"
         android:layout_centerHorizontal="true"
         android:background="@drawable/tab_msg_iv_selector"/>
@@ -16,9 +16,8 @@
         android:layout_height="wrap_content"
         android:text="new text"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/iv_title"
-        android:id="@+id/tv_title"
+        android:layout_below="@+id/view_tab_clubm_activity_iv_title"
+        android:id="@+id/view_tab_clubm_activity_tv_title"
         android:textColor="@drawable/tab_selector"/>
-
 
 </RelativeLayout>
