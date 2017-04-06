@@ -126,11 +126,11 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:layout_marginLeft="20dp"
-                        android:text="社团简介:"
+                        android:text="简介:"
                         android:textColor="@color/colorBlack"
                         android:textSize="20sp"/>
                     <android.support.v4.widget.NestedScrollView
-                        android:layout_width="200dp"
+                        android:layout_width="150dp"
                         android:layout_height="100dp"
                         android:layout_toEndOf="@id/club_cici"
                         android:layout_marginTop="5dp"
@@ -160,11 +160,11 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="30dp"
                         android:layout_marginLeft="20dp"
-                        android:text="社团成员:"
+                        android:text="成员:"
                         android:textColor="@color/colorBlack"
                         android:textSize="20sp"/>
                     <android.support.v4.widget.NestedScrollView
-                        android:layout_width="200dp"
+                        android:layout_width="150dp"
                         android:layout_height="100dp"
                         android:layout_toEndOf="@id/club_mnmn"
                         android:layout_marginTop="25dp"
