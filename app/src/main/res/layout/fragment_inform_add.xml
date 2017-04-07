@@ -7,11 +7,11 @@
     android:background="@color/colorGray">
 
     <FrameLayout
-        android:id="@+id/fragment_inform_flayout1"
+        android:id="@+id/fragment_inform_add_flayout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <ImageView
-            android:id="@+id/fragment_inform_iv1"
+            android:id="@+id/fragment_inform_add_iv1"
             android:layout_marginTop="15dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
@@ -34,69 +34,105 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                     <TextView
-                        android:id="@+id/fragment_inform_approval"
+                        android:id="@+id/fragment_inform_add_approval"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:text="通知"
+                        android:layout_marginLeft="10dp"
+                        android:text="新通知"
                         android:textColor="@color/colorBlack"
-                        android:textSize="30sp"
+                        android:textSize="40sp"
                         />
                 </RelativeLayout>
             </TableRow>
             <TableRow>
-                <android.support.v4.widget.NestedScrollView
-                    android:id="@+id/fragment_inform_nsv1"
-                    android:layout_width="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_height="300dp"
-                    android:layout_marginStart="10dp"
+
+                <View
                     android:layout_marginTop="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:background="@drawable/corners_black"
-                    app:layout_behavior="@string/appbar_scrolling_view_behavior">
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/fragment_inform_rv1"
-                        android:layout_marginTop="10dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        />
-                </android.support.v4.widget.NestedScrollView>
+                    android:background="@color/colorBlack"
+                    android:id="@+id/fragment_inform_add_divider"
+                    style="@style/my_page_item_divider"
+                    android:layout_alignParentBottom="true"/>
             </TableRow>
             <TableRow>
                 <LinearLayout
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"
                     android:orientation="horizontal">
-                    <CheckBox
-                        android:id="@+id/fragment_inform_cb_all1"
+                    <TextView
+                        android:id="@+id/fragment_inform_add_title"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="10dp"
+                        android:text="标题:"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="25sp"
+                        />
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
-                        android:layout_marginTop="20dp"
-                        android:text="全选"/>
+                        android:layout_marginTop="10dp"
+                        android:hint="请输入通知标题"/>
+                </LinearLayout>
+            </TableRow>
+            <TableRow>
+                <LinearLayout
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/fragment_inform_add_content"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="10dp"
+                        android:text="内容:"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="25sp"
+                        />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginTop="10dp"
+                            android:minLines="8"
+                            android:freezesText="true"
+                            android:inputType="textMultiLine"
+                            android:gravity="left|top"
+                            android:background="@drawable/corners_btn_black"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </TableRow>
+            <TableRow>
+                <LinearLayout
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="right">
                         <Button
-                            android:id="@+id/fragment_inform_btn_delete"
+                            android:id="@+id/fragment_inform_add_btn_delete"
                             android:layout_width="wrap_content"
                             android:layout_height="50dp"
                             android:layout_marginTop="20dp"
                             android:layout_marginStart="20dp"
                             android:layout_marginEnd="20dp"
-                            android:text="删除"
+                            android:text="清空"
                             android:textColor="@color/colorBlack"
                             android:textSize="15sp"
                             android:background="@drawable/corners_btn_black"/>
                         <Button
-                            android:id="@+id/fragment_inform_btn_release"
+                            android:id="@+id/fragment_inform_add_btn_release"
                             android:layout_width="wrap_content"
                             android:layout_height="50dp"
                             android:layout_marginTop="20dp"
-                            android:layout_marginEnd="10dp"
                             android:text="发布"
                             android:textColor="@color/colorBlack"
                             android:textSize="15sp"
