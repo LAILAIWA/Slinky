@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/colorGray">
-
     <FrameLayout
         android:id="@+id/fragment_member_flayout1"
         android:layout_width="match_parent"
@@ -45,12 +44,13 @@
                 </RelativeLayout>
             </TableRow>
             <TableRow>
-                <android.support.v4.widget.NestedScrollView
-                    android:id="@+id/fragment_member_nsv1"
+                <android.support.v4.widget.SwipeRefreshLayout
+                    android:id="@+id/fragment_member_sr1"
                     android:layout_width="wrap_content"
                     android:layout_weight="1"
-                    android:layout_height="150dp"
+                    android:layout_height="300dp"
                     android:layout_marginTop="20dp"
+                    android:fillViewport="true"
                     android:background="@drawable/corners_black"
                     app:layout_behavior="@string/appbar_scrolling_view_behavior">
                     <android.support.v7.widget.RecyclerView
@@ -59,7 +59,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         />
-                </android.support.v4.widget.NestedScrollView>
+                </android.support.v4.widget.SwipeRefreshLayout>
             </TableRow>
             <TableRow>
                 <LinearLayout
@@ -126,12 +126,13 @@
                     android:textSize="30sp"/>
             </TableRow>
             <TableRow>
-                <android.support.v4.widget.NestedScrollView
-                    android:id="@+id/fragment_member_nsv2"
+                <android.support.v4.widget.SwipeRefreshLayout
+                    android:id="@+id/fragment_member_sr2"
                     android:layout_width="wrap_content"
                     android:layout_weight="1"
-                    android:layout_height="150dp"
+                    android:layout_height="300dp"
                     android:layout_marginTop="20dp"
+                    android:fillViewport="true"
                     android:background="@drawable/corners_black"
                     app:layout_behavior="@string/appbar_scrolling_view_behavior">
                     <android.support.v7.widget.RecyclerView
@@ -140,7 +141,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         />
-                </android.support.v4.widget.NestedScrollView>
+                </android.support.v4.widget.SwipeRefreshLayout>
             </TableRow>
             <TableRow>
                 <LinearLayout

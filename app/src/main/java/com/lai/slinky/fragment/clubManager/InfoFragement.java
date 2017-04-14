@@ -101,8 +101,6 @@ public class InfoFragement extends LazyFragment {
 
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
-        //通过广播与Service保持通信
-        serviceReceiver = new ServiceReceiver();
         //接收传递信息，需要至少：社团ID
         clubId = this.getActivity().getIntent().getIntExtra(StringClubId,-1);
         //传递用户信息用于数据库查询
@@ -124,12 +122,6 @@ public class InfoFragement extends LazyFragment {
                 b0.putString(StringPartyInfo,partyInfoString);
                 intent.putExtras(b0);
 
-                //创建IntentFilter
-                IntentFilter filter = new IntentFilter();
-                //指定BroadcastReceiver监听的action
-                filter.addAction(TAG);
-                //注册BroadcastReceiver
-                getActivity().registerReceiver(serviceReceiver, filter);
                 //启动后台Service
                 getActivity().startService(intent);
             }
@@ -165,5 +157,17 @@ public class InfoFragement extends LazyFragment {
         super.onDestroy();
         //注意不要漏写
         getActivity().unregisterReceiver(serviceReceiver);
+    }
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        //提前进行官博的注册等
+        serviceReceiver = new ServiceReceiver();
+        //创建IntentFilter
+        IntentFilter filter = new IntentFilter();
+        //指定BroadcastReceiver监听的action
+        filter.addAction(TAG);
+        //注册BroadcastReceiver
+        getActivity().registerReceiver(serviceReceiver, filter);
     }
 }

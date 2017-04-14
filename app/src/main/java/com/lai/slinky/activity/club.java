@@ -198,8 +198,13 @@ public class Club extends Activity {
             club_info.setText(partyInfo);
             //更新数据
 
-            unregisterReceiver(serviceReceiver);
 
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(serviceReceiver);
     }
 }

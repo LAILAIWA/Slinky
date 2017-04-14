@@ -2,7 +2,6 @@ package com.lai.slinky.activity;
 
 import android.app.FragmentTransaction;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -12,7 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.lai.slinky.R;
 import com.lai.slinky.UI.ClubMFragmentPagerAdapter;
-import com.lai.slinky.fragment.TwoFragment;
 
 import java.util.List;
 
@@ -45,9 +43,6 @@ public class ClubManager extends AppCompatActivity{
         fManager = getFragmentManager();
         FragmentTransaction ft = fManager.beginTransaction();
 
-        Intent intent2 = new Intent(this, TwoFragment.class);
-        Bundle b2 = new Bundle();
-        b2.putStringArray("userInfo",userInfo);
 
         //初始化
         init();
