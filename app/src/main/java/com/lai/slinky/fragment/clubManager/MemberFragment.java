@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,10 +21,14 @@ import com.lai.slinky.RecyclerView.ClubApplyAdapter;
 import com.lai.slinky.RecyclerView.DividerItemDecoration;
 import com.lai.slinky.RecyclerView.FullyLinearLayoutManager;
 import com.lai.slinky.Service.ClubService;
+import com.lai.slinky.activity.Apply;
+import com.lai.slinky.activity.Quit;
 import com.lai.slinky.fragment.LazyFragment;
 import com.lai.slinky.model.apply;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Administrator on 2017/4/4.
@@ -45,6 +51,9 @@ public class MemberFragment extends LazyFragment {
     private RecyclerView MemberRecyclerView,QuitRecyclerView;
     private ClubApplyAdapter MemberAdapterJoin,MemberAdapterQuit;
     private DividerItemDecoration MemberDecoration;
+
+    // 存储勾选框状态的map集合
+    private Map<Integer, Boolean> map = new HashMap<>();
 
     View view;
 
@@ -72,7 +81,6 @@ public class MemberFragment extends LazyFragment {
         //声明MemberRecyclerView,QuitRecyclerView分别显示入团申请和退团申请
         MemberRecyclerView = (RecyclerView)view.findViewById(R.id.fragment_member_rv1);
         QuitRecyclerView = (RecyclerView)view.findViewById(R.id.fragment_member_rv2);
-
 
         return view;
     }
@@ -115,7 +123,7 @@ public class MemberFragment extends LazyFragment {
 
         //添加水平分割线,想要改变水平分割线的风格可以在主题中通过改变listDivider来设置
         MemberDecoration = new DividerItemDecoration(mActivity, DividerItemDecoration.VERTICAL_LIST);
-        MemberDecoration.setDividerHeight(15);
+        MemberDecoration.setDividerHeight(1);
         MemberRecyclerView.addItemDecoration(MemberDecoration);
         QuitRecyclerView.addItemDecoration(MemberDecoration);
         /*
@@ -133,68 +141,79 @@ public class MemberFragment extends LazyFragment {
             MemberAdapterQuit.notifyDataSetChanged();
         }
 
+        final CheckBox cb1 = (CheckBox) view.findViewById(R.id.fragment_member_cb_all1);
+        final CheckBox cb2 = (CheckBox) view.findViewById(R.id.fragment_member_cb_all2);
+        //实现两个全选功能
+        cb1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(cb1.isChecked()){
+                    Map<Integer,Boolean> map = MemberAdapterJoin.getCBMap();
+                    for(int i = 0;i < map.size();i++){
+                        map.put(i,true);
+                        MemberAdapterJoin.notifyDataSetChanged();
+                    }
+                }else{
+                    Map<Integer,Boolean> map = MemberAdapterJoin.getCBMap();
+                    for(int i = 0;i < map.size();i++){
+                        map.put(i,false);
+                        MemberAdapterJoin.notifyDataSetChanged();
+                    }
+                }
+            }
+        });
+        cb2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(cb2.isChecked()){
+                    Map<Integer,Boolean> map = MemberAdapterQuit.getCBMap();
+                    for(int i = 0;i < map.size();i++){
+                        map.put(i,true);
+                        MemberAdapterQuit.notifyDataSetChanged();
+                    }
+                }else{
+                    Map<Integer,Boolean> map = MemberAdapterQuit.getCBMap();
+                    for(int i = 0;i < map.size();i++){
+                        map.put(i,false);
+                        MemberAdapterQuit.notifyDataSetChanged();
+                    }
+                }
+            }
+        });
         //添加监听回调
         MemberAdapterJoin.setClickListener(new ClubApplyAdapter.ItemClickListener() {
             @Override
-            public void OnCbClick(View view, int position) {
-                //checkbox监听
-                Log.e("----勾选Item----", String.valueOf(position));
-                Toast.makeText(getActivity(), "Item " + position + " 已勾选", Toast.LENGTH_SHORT).show();
-
-
-            }
-
-            @Override
             public void OnIvClick(View view, int position) {
-                //ImageView和TextView监听
-                // apply ta = listData.get(position);
-//                Bundle bb = new Bundle();
-//                bb.putStringArray("userinfo",userInfo);//用户信息还需在查询权限用到
-//                bb.putInt("teamid",ta.getId());
-//                bb.putString("teamtitle",ta.getTitle());
-//                bb.putString("teamtype",ta.getType());
-//                bb.putString("teaminfo",ta.getCharge1());
-//                Log.e("--ItemToClub title--",String.valueOf(ta.getId()));
-//                Log.e("--ItemToClub title--",String.valueOf(ta.getTitle()));
-//                Log.e("--ItemToClub type--",String.valueOf(ta.getType()));
-//                Log.e("--ItemToClub info--",String.valueOf(ta.getCharge1()));
-//                //跳转动作
-//                Intent itoclub = new Intent(getActivity(), Club.class);
-//                itoclub.putExtras(bb);
-//                startActivity(itoclub);
+                Log.e("----点击Item----", String.valueOf(position));
+                Toast.makeText(getActivity(), "Item " + position + "点击", Toast.LENGTH_SHORT).show();
 
+                //跳转申请界面
+                apply ta = listDataJoin.get(position);
+                Bundle bb = new Bundle();
+                bb.putParcelable(StringListJoin,ta);//对应申请表信息传递过去
+
+                //跳转动作
+                Intent ItoApply = new Intent(getActivity(), Apply.class);
+                ItoApply.putExtras(bb);
+                startActivity(ItoApply);
             }
         });
 
         MemberAdapterQuit.setClickListener(new ClubApplyAdapter.ItemClickListener() {
             @Override
-            public void OnCbClick(View view, int position) {
-                //checkbox监听
-                Log.e("----勾选Item----", String.valueOf(position));
-                Toast.makeText(getActivity(), "Item " + position + " 已勾选", Toast.LENGTH_SHORT).show();
-
-
-            }
-
-            @Override
             public void OnIvClick(View view, int position) {
-                //ImageView和TextView监听
-                // apply ta = listData.get(position);
-//                Bundle bb = new Bundle();
-//                bb.putStringArray("userinfo",userInfo);//用户信息还需在查询权限用到
-//                bb.putInt("teamid",ta.getId());
-//                bb.putString("teamtitle",ta.getTitle());
-//                bb.putString("teamtype",ta.getType());
-//                bb.putString("teaminfo",ta.getCharge1());
-//                Log.e("--ItemToClub title--",String.valueOf(ta.getId()));
-//                Log.e("--ItemToClub title--",String.valueOf(ta.getTitle()));
-//                Log.e("--ItemToClub type--",String.valueOf(ta.getType()));
-//                Log.e("--ItemToClub info--",String.valueOf(ta.getCharge1()));
-//                //跳转动作
-//                Intent itoclub = new Intent(getActivity(), Club.class);
-//                itoclub.putExtras(bb);
-//                startActivity(itoclub);
+                Log.e("----点击Item----", String.valueOf(position));
+                Toast.makeText(getActivity(), "Item " + position + "点击", Toast.LENGTH_SHORT).show();
 
+                //跳转退出界面
+                apply ta = listDataQuit.get(position);
+                Bundle bb = new Bundle();
+                bb.putParcelable(StringListQuit,ta);//对应申请表信息传递过去
+
+                //跳转动作
+                Intent ItoApply = new Intent(getActivity(), Quit.class);
+                ItoApply.putExtras(bb);
+                startActivity(ItoApply);
             }
         });
     }
@@ -216,11 +235,6 @@ public class MemberFragment extends LazyFragment {
             for(int j = 0;j < list2.size();j++){
                 listDataQuit.add(j,list2.get(j));
             }
-
-            apply aa = listDataQuit.get(0);
-            Log.e("==aa=====>>>>",aa.getName());
-
-            Log.e("============>>>>","getlistData");
             //更新适配器数据
             MemberAdapterJoin.notifyDataSetChanged();
             MemberAdapterQuit.notifyDataSetChanged();

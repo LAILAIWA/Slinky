@@ -40,6 +40,7 @@ public class Club extends Activity {
     List<team> listData = new ArrayList<team>();
     public static final String TAG = "com.lai.slinky.activity.Club.shetuanservice";
     public static final String TAG1 = "com.lai.slinky.Service.ClubService";
+    Intent intent;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,13 +65,14 @@ public class Club extends Activity {
         serviceReceiver = new ServiceReceiver();
 
         String serviceSeclect = "find_club_info";
-        Intent intent = new Intent(this,localService.class);
+        intent = new Intent(this,localService.class);
 
         //传送社团标识信息，用于查找相关信息,选择查找社团信息服务
         final Bundle b0 = new Bundle();
         b0.putStringArray(StringUserInfo,userinfo);
         b0.putInt(StringClubId,teamid);
-        b0.putString(StringClubName, teamtitle);
+        //因为要传递最新社团名，所以服务开始前不放入teamtitle，等到收到广播后再放入
+//        b0.putString(StringClubName, teamtitle);
         b0.putString(StringSeclectInfo, serviceSeclect);
         intent.putExtras(b0);
 
@@ -108,6 +110,7 @@ public class Club extends Activity {
 
                     //将社团信息录入
                     b0.putString(StringPartyInfo,partyInfo);
+                    b0.putString(StringClubName, teamtitle);
                     Intent i = new Intent(Club.this,ClubManager.class);
                     i.putExtras(b0);
                     startActivity(i);
@@ -171,6 +174,7 @@ public class Club extends Activity {
 //            //强制转换
 //            ArrayList al = intent.getParcelableArrayListExtra("teamLogoMemo");
 //            listData = (List<team>) al;
+            teamtitle = intent.getStringExtra("partyName");
             partyInfo = intent.getStringExtra("partyMemo");
 
             //直接用intent传递Bitmap，不能超过40K，否则会程序崩溃,所以改为传递字节流
@@ -189,22 +193,31 @@ public class Club extends Activity {
 
 //            team tm = listData.get(0);
 
+            TextView club_name = (TextView) findViewById(R.id.club_name);
             ImageView club_icon = (ImageView)findViewById(R.id.club_icon);
             TextView club_info = (TextView)findViewById(R.id.club_club_info);
 
 //            club_icon.setImageBitmap(tm.getPartyLogo());
 //            club_info.setText(tm.getInfo());
+            club_name.setText(teamtitle);
             club_icon.setImageBitmap(partyLogoBm);
             club_info.setText(partyInfo);
             //更新数据
-
 
         }
     }
 
     @Override
+    protected void onRestart() {
+        super.onRestart();
+        startService(intent);
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
+        Log.e("--Club---","onDestroy");
+        Log.e("--Club-Service","unregister");
         unregisterReceiver(serviceReceiver);
     }
 }

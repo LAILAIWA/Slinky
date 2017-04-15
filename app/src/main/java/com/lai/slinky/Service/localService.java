@@ -256,11 +256,23 @@ public class localService extends IntentService {
             Bundle bbb = intent.getExtras();
             int clubId = bbb.getInt(StringClubId);
             Log.e("---clubString---->",String.valueOf(clubId));//社团ID
-            String clubString = bbb.getString(StringClubInfo);
-            Log.e("---clubString---->",clubString);//社团名
             //获得用户信息用于查询权限
             String[] userinfo = bbb.getStringArray(StringUserInfo);
             Log.e("---userId---->",userinfo[0]);//用户Id
+
+            //首先查询最新社团名
+            String sql1 = "select PartyName from Slinky.Party_table where PartyId = '" + clubId + "';";
+            ResultSet resultSet1 = util.selectSQL(sql1);
+            String getPartyName = "";
+            try{
+                while (resultSet1.next()) {
+                    getPartyName = resultSet1.getString("PartyName");
+                    Log.e("---getPartyName---->",getPartyName);
+                }
+            }catch (Exception ex){
+                Log.e("==================","数据库错误");
+                ex.printStackTrace();
+            }
 
             //首先，查询用户是否有管理社团权限
             String sql0 ="select UserId,PermissionId from Slinky.UserParty_table where PartyId = '" + clubId + "';";
@@ -348,6 +360,7 @@ public class localService extends IntentService {
             bl.add(listData);
 
             Bundle teamBundle = new Bundle();
+            teamBundle.putString("partyName",getPartyName);
             teamBundle.putInt("permission",ifHasPermission);
             teamBundle.putParcelableArrayList("teamLogoMemo",bl);
             teamBundle.putString("partyMemo",partyMemo);
