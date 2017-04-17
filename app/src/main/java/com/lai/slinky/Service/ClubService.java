@@ -2,12 +2,19 @@ package com.lai.slinky.Service;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 
 import com.lai.slinky.Util;
+import com.lai.slinky.model.activityy;
 import com.lai.slinky.model.apply;
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.sql.Blob;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
@@ -22,8 +29,9 @@ public class ClubService extends IntentService {
     // 3.管理社团通知
     // 4.管理社团活动
     public static final String TAG = "com.lai.slinky.Service.ClubService";//钥匙
-    public static final String TAG1 = "com.lai.slinky.fragment.clubManager.InfoFragment";//infofragment服务
-    public static final String TAG2 = "com.lai.slinky.fragment.clubManager.MemberFragment";
+    public static final String TAG1 = "com.lai.slinky.fragment.clubManager.InfoFragment";//InfoFragment服务
+    public static final String TAG2 = "com.lai.slinky.fragment.clubManager.MemberFragment";//MemberFragment服务
+    public static final String TAG3 = "com.lai.slinky.fragment.clubManager.ActivityFragment";//ActivityFragment服务
     static final String StringSeclectInfo = "serviceSeclect";
     static final String StringClubName = "clubInfo";
     static final String StringClubId = "clubId";
@@ -31,11 +39,16 @@ public class ClubService extends IntentService {
     static final String StringIfInfoUpadated= "ifUpdateSuccessed";
     static final String StringListJoin= "listjoin";
     static final String StringListQuit= "listquit";
+    //select_club_activity
+    static final String StringActivityList= "listActivity";
+    static final String StringByteArray= "byteArray";
+    static final String StringActNum= "actNum";
 
 
     Util util = new Util();
     apply ta = new apply();
     apply ta1 = new apply();
+    activityy act = new activityy();
     public ClubService(){
         super("ClubService");
     }
@@ -217,8 +230,159 @@ public class ClubService extends IntentService {
         else if(serviceSeclect.equals("manage_club_inform")){
 
         }
-        else if(serviceSeclect.equals("apply_club_activity")){
+        else if(serviceSeclect.equals("select_club_activity")){
+            //查询社团活动表，注意不是活动申请表
+            //注意BLOB格式的Poster的格式转换
+            //记得考虑空值状态
 
+            ArrayList<activityy> listData = new ArrayList<activityy>();
+            ArrayList ListActId = new ArrayList();
+            ArrayList ListActName = new ArrayList();
+            ArrayList ListOrganizer = new ArrayList();
+            ArrayList ListTelephone = new ArrayList();
+            ArrayList ListNotice = new ArrayList();
+            ArrayList ListBuildingId = new ArrayList();
+            ArrayList ListActPlace = new ArrayList();
+            ArrayList ListActNumber = new ArrayList();
+            ArrayList ListStateId = new ArrayList();
+            ArrayList ListMemo = new ArrayList();
+
+            ArrayList ListStartTime = new ArrayList();
+            ArrayList ListEndTime = new ArrayList();
+
+            ArrayList<byte[]> plb = new ArrayList<byte[]>();
+
+            int clubId = bb.getInt(StringClubId);
+            Log.e("--clubId-->",String.valueOf(clubId));
+
+            //查找社团活动表，找出该社团所申请举办的活动，及其所有信息
+            String sql ="select * from Slinky.Activity_table where PartyId = '" + clubId + "';";
+            ResultSet resultSet = util.selectSQL(sql);
+            int num = 0;//记录活动数目
+            try{
+                while (resultSet.next()){
+                    //获得每次得到的活动ID
+                    ListActId.add(num,-1);
+                    int ActId = resultSet.getInt("ActId");
+                    ListActId.set(num,ActId);
+                    Log.e("----ActId----->",String.valueOf(ActId));
+
+                    //获得每次得到的活动名
+                    ListActName.add(num,"未设置活动名");
+                    String ActName = resultSet.getString("ActName");
+                    ListActName.set(num,ActName);
+                    Log.e("----ActName----->",String.valueOf(ActName));
+
+                    //获得每次得到的组织者ID
+                    ListOrganizer.add(num,"未设置组织者Id");
+                    String Organizer = resultSet.getString("Organizer");
+                    ListOrganizer.set(num,Organizer);
+                    Log.e("----Organizer----->",String.valueOf(Organizer));
+
+                    //获得每次得到的组织者电话
+                    ListTelephone.add(num,"未设置组织者电话");
+                    String Telephone = resultSet.getString("Telephone");
+                    ListTelephone.set(num,Telephone);
+                    Log.e("----Telephone----->",String.valueOf(Telephone));
+
+                    //获得每次得到的活动布告
+                    ListNotice.add(num,"未设置布告");
+                    String Notice = resultSet.getString("Notice");
+                    ListNotice.set(num,Notice);
+                    Log.e("----Notice----->",String.valueOf(Notice));
+
+                    //获得每次得到的活动建筑编号
+                    ListBuildingId.add(num,-1);
+                    int BuildingId = resultSet.getInt("BuildingId");
+                    ListBuildingId.set(num,BuildingId);
+                    Log.e("--BuildingId-->",String.valueOf(BuildingId));
+
+                    //获得每次得到的活动举办地点
+                    ListActPlace.add(num,"未设置活动举办地点");
+                    String ActPlace = resultSet.getString("ActPlace");
+                    ListActPlace.set(num,ActPlace);
+                    Log.e("--ActPlace--->",String.valueOf(ActPlace));
+
+                    //获得每次得到的活动人数
+                    ListActNumber.add(num,0);
+                    int ActNumber = resultSet.getInt("ActNumber");
+                    ListActNumber.set(num,ActNumber);
+                    Log.e("--ActNumber--->",String.valueOf(ActNumber));
+
+                    //获得每次得到的活动状态
+                    ListStateId.add(num,1);//初始化1为未通过审核
+                    int StateId = resultSet.getInt("StateId");
+                    ListStateId.set(num,StateId);
+                    Log.e("--StateId--->",String.valueOf(StateId));
+
+                    //获得每次得到的活动举办地点
+                    ListMemo.add(num,"未设置活动memo");
+                    String Memo = resultSet.getString("Memo");
+                    ListMemo.set(num,Memo);
+                    Log.e("--Memo--->",String.valueOf(Memo));
+
+                    //获得每次得到的活动举办起始日期,---------注意声明类中是String类型，所以要数据转换
+                    ListStartTime.add(num,"未设置活动起始日期");
+                    Date StartTimeDate = resultSet.getDate("StartTime");
+                    String StartTime = StartTimeDate.toString();
+                    ListStartTime.set(num,StartTime);
+                    Log.e("--StartTime--->",StartTime);
+
+                    //获得每次得到的活动结束日期
+                    ListEndTime.add(num,"未设置活动结束日期");
+                    Date EndTimeDate = resultSet.getDate("EndTime");
+                    String EndTime = EndTimeDate.toString();
+                    ListEndTime.set(num,EndTime);
+                    Log.e("--EndTime--->",EndTime);
+
+                    byte[] plb1 = new byte[5120];
+                    plb.add(plb1);
+
+                    //获取数据库Logo Blob数据
+                    Blob blob = resultSet.getBlob("Poster");
+                    //声明输入输出流
+                    ByteArrayOutputStream os = new ByteArrayOutputStream();
+                    InputStream is = blob.getBinaryStream();
+                    Bitmap bitmap = BitmapFactory.decodeStream(is);
+                    bitmap.compress(Bitmap.CompressFormat.PNG,100,os);//将图片百分百高质量压缩入流
+                    plb1 = os.toByteArray();//将输出流赋予字节流
+                    plb.set(num,plb1);
+
+                    //关闭输入输出流
+                    os.close();
+                    is.close();
+
+                    //转化为Bitmap，不用转化了，直接传送byte字节流
+                    Log.e("----Blob To byte--->","Bitmap");
+
+                    //注意所创建的activityy传送流并不传送Poster
+                    act = new activityy( (int) ListActId.get(num), ListActName.get(num).toString(), clubId, ListOrganizer.get(num).toString(),
+                                          ListTelephone.get(num).toString(), ListNotice.get(num).toString(), (int)ListBuildingId.get(num),
+                                          ListActPlace.get(num).toString(),(int)ListActNumber.get(num),(int)ListStateId.get(num),
+                                          ListMemo.get(num).toString(), ListStartTime.get(num).toString(), ListEndTime.get(num).toString());
+                    listData.add(act);
+                    num++;
+                    Log.e("========>>>>",act.getActName());
+                }
+            }catch(Exception ex){
+                Log.e("==================","数据库错误-社团活动表");
+                ex.printStackTrace();
+            }
+
+            //传递list
+            Bundle teamBundle = new Bundle();
+            teamBundle.putInt(StringActNum,num);
+            teamBundle.putInt(StringClubId,clubId);
+            teamBundle.putParcelableArrayList(StringActivityList,listData);
+            //因为要传递多维数组，只找到了传递byte[]的方法，所以用for循环添加
+            for(int n = 0;n < plb.size();n++){
+                teamBundle.putByteArray(StringByteArray + n,plb.get(n));
+            }
+            Log.e("============>>>>","sendBroadcast");
+            //传送结果广播回UI,参数很关键，连接钥匙
+            Intent i1 = new Intent(TAG3);
+            i1.putExtras(teamBundle);
+            sendBroadcast(i1);
         }
         else{
             Log.e("============>>>>","sendBroadcast");

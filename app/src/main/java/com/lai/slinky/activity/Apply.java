@@ -11,11 +11,11 @@ import com.lai.slinky.model.apply;
  * Created by Administrator on 2017/4/16.
  */
 public class Apply extends Activity {
-    static final String StringListJoin= "listjoin";
-    apply ta;
+        static final String StringListJoin= "listjoin";
+        apply ta;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.apply_club_verson);
+        setContentView(R.layout.club_apply_verson);
 
         //收取传递信息
         ta = getIntent().getParcelableExtra(StringListJoin);

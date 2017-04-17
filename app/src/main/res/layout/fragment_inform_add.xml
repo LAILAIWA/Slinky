@@ -103,6 +103,7 @@
                             android:freezesText="true"
                             android:inputType="textMultiLine"
                             android:gravity="left|top"
+                            android:scrollbars="vertical"
                             android:background="@drawable/corners_btn_black"/>
                     </LinearLayout>
                 </LinearLayout>

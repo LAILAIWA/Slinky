@@ -55,6 +55,16 @@
             android:label=""
             android:launchMode="singleInstance">
         </activity>
+        <activity
+        android:name=".activity.Activityy"
+        android:label=""
+        android:launchMode="singleInstance">
+        </activity>
+        <activity
+            android:name=".activity.ActivityApply"
+            android:label=""
+            android:launchMode="singleInstance">
+        </activity>
         <service
             android:name=".Service.localService">
             <intent-filter>

@@ -35,7 +35,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginStart="10dp"
                         android:text="申请人:"
                         android:textColor="@color/colorBlack"
                         android:textSize="20sp"
@@ -44,8 +44,8 @@
                         android:id="@+id/apply_club_verson_et_realname"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_toRightOf="@id/apply_club_verson_tv_name"
-                        android:layout_marginLeft="20dp"
+                        android:layout_toEndOf="@id/apply_club_verson_tv_name"
+                        android:layout_marginStart="20dp"
                         android:inputType="text"
                         android:hint="申请人名" />
                 </RelativeLayout>
@@ -59,7 +59,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginStart="10dp"
                         android:text="年级:"
                         android:textColor="@color/colorBlack"
                         android:textSize="20sp"
@@ -68,8 +68,8 @@
                         android:id="@+id/apply_club_verson_et_realgrade"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_toRightOf="@id/apply_club_verson_tv_grade"
-                        android:layout_marginLeft="40dp"
+                        android:layout_toEndOf="@id/apply_club_verson_tv_grade"
+                        android:layout_marginStart="40dp"
                         android:inputType="text"
                         android:hint="2017" />
                 </RelativeLayout>
@@ -83,7 +83,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginStart="10dp"
                         android:text="班级:"
                         android:textColor="@color/colorBlack"
                         android:textSize="20sp"
@@ -92,8 +92,8 @@
                         android:id="@+id/apply_club_verson_et_realclass"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_toRightOf="@id/apply_club_verson_tv_class"
-                        android:layout_marginLeft="40dp"
+                        android:layout_toEndOf="@id/apply_club_verson_tv_class"
+                        android:layout_marginStart="40dp"
                         android:inputType="text"
                         android:hint="计算机学院软件工程2班" />
                 </RelativeLayout>
@@ -107,7 +107,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginStart="10dp"
                         android:text="手机号码:"
                         android:textColor="@color/colorBlack"
                         android:textSize="20sp"
@@ -116,9 +116,9 @@
                         android:id="@+id/apply_club_verson_et_realtelephone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_toRightOf="@id/apply_club_verson_tv_telephone"
-                        android:layout_marginLeft="0dp"
-                        android:inputType="text"
+                        android:layout_toEndOf="@id/apply_club_verson_tv_telephone"
+                        android:layout_marginStart="0dp"
+                        android:inputType="phone"
                         android:hint="12345678911" />
                 </RelativeLayout>
             </TableRow>
@@ -152,7 +152,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginStart="10dp"
                         android:text="个人爱好:"
                         android:textColor="@color/colorBlack"
                         android:textSize="20sp"/>
@@ -173,7 +173,10 @@
                             android:layout_marginStart="5dp"
                             android:layout_marginEnd="5dp"
                             android:layout_marginBottom="5dp"
-                            android:inputType="text"
+                            android:inputType="textMultiLine"
+                            android:gravity="left|top"
+                            android:scrollbars="vertical"
+                            android:minLines="3"
                             android:hint="我的爱好"
                             android:textColor="@color/colorBlack"
                             android:textSize="20sp"/>
@@ -187,7 +190,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginStart="10dp"
                         android:text="申请理由:"
                         android:textColor="@color/colorBlack"
                         android:textSize="20sp"/>
@@ -208,7 +211,11 @@
                             android:layout_marginStart="5dp"
                             android:layout_marginEnd="5dp"
                             android:layout_marginBottom="5dp"
-                            android:inputType="text"
+                            android:minLines="8"
+                            android:freezesText="true"
+                            android:inputType="textMultiLine"
+                            android:gravity="left|top"
+                            android:scrollbars="vertical"
                             android:hint="加入理由"
                             android:textColor="@color/colorBlack"
                             android:textSize="20sp"/>
@@ -225,7 +232,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginStart="10dp"
                         android:text="审核状态:"
                         android:textColor="@color/colorBlack"
                         android:textSize="20sp"
@@ -234,7 +241,7 @@
                         android:id="@+id/apply_club_verson_et_realstate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_toRightOf="@id/apply_club_verson_tv_state"
+                        android:layout_toEndOf="@id/apply_club_verson_tv_state"
                         android:layout_marginStart="20dp"
                         android:inputType="text"
                         android:hint="未通过" />

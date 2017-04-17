@@ -44,7 +44,7 @@ public class Club extends Activity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.club_version);
+        setContentView(R.layout.club_version_content);
 
         //获取控件
         TextView club_name = (TextView) findViewById(R.id.club_name);
@@ -210,6 +210,7 @@ public class Club extends Activity {
     @Override
     protected void onRestart() {
         super.onRestart();
+        //利用Activity生命周期，实现重新刷新数据
         startService(intent);
     }
 

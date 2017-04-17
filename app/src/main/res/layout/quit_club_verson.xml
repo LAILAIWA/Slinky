@@ -101,8 +101,11 @@
                             android:layout_marginStart="5dp"
                             android:layout_marginEnd="5dp"
                             android:layout_marginBottom="5dp"
-                            android:inputType="text"
-                            android:hint="退社理由"
+                            android:minLines="8"
+                            android:freezesText="true"
+                            android:inputType="textMultiLine"
+                            android:gravity="left|top"
+                            android:scrollbars="vertical"
                             android:textColor="@color/colorBlack"
                             android:textSize="20sp"/>
                     </android.support.v4.widget.NestedScrollView>

@@ -100,7 +100,11 @@
                             android:layout_marginStart="5dp"
                             android:layout_marginEnd="5dp"
                             android:layout_marginBottom="5dp"
-                            android:inputType="text"
+                            android:minLines="8"
+                            android:freezesText="true"
+                            android:inputType="textMultiLine"
+                            android:gravity="left|top"
+                            android:scrollbars="vertical"
                             android:hint="社团简介"
                             android:textColor="@color/colorBlack"
                             android:textSize="20sp"/>

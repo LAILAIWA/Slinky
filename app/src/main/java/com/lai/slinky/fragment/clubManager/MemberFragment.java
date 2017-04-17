@@ -38,14 +38,9 @@ public class MemberFragment extends LazyFragment {
     //申请后台服务ClubService-manage_club_member
     public static final String TAG = "com.lai.slinky.fragment.clubManager.MemberFragment";
     static final String StringSeclectInfo = "serviceSeclect";
-    static final String StringClubName = "clubInfo";
     static final String StringClubId = "clubId";
-    static final String StringUserInfo = "userinfo";
-    static final String StringPartyInfo= "partyInfo";
-    static final String StringIfInfoUpadated= "ifUpdateSuccessed";
     static final String StringListJoin= "listjoin";
     static final String StringListQuit= "listquit";
-    private String partyInfoString,clubNameString;
     int clubId;
     ServiceReceiver serviceReceiver = new ServiceReceiver();
     private RecyclerView MemberRecyclerView,QuitRecyclerView;
@@ -101,7 +96,7 @@ public class MemberFragment extends LazyFragment {
         Intent intent = new Intent(this.getActivity(), ClubService.class);
         Bundle b0 = new Bundle();
         b0.putInt(StringClubId, clubId);
-        b0.putString("serviceSeclect", serviceSeclect);
+        b0.putString(StringSeclectInfo, serviceSeclect);
         intent.putExtras(b0);
 
         //启动后台Service-----------------------------------------------
