@@ -25,7 +25,7 @@ import java.util.List;
 public class ClubMFragmentPagerAdapter extends FragmentPagerAdapter {
     final int PAGE_COUNT = 4;
     private String tabTitles[] = new String[]{"信息","成员","通知","活动"};
-    private int[] imageResId = {R.drawable.tab_msg_iv_selector,R.drawable.tab_member_iv_selector,R.drawable.tab_msg_iv_selector,R.drawable.tab_msg_iv_selector};
+    private int[] imageResId = {R.drawable.tab_msg_iv_selector,R.drawable.tab_member_iv_selector,R.drawable.tab_msg_iv_selector,R.drawable.tab_activity_iv_selector};
     private Context context;
     private List<Fragment> list;
     private List<String> title;
