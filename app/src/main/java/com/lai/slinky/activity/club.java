@@ -1,6 +1,5 @@
 package com.lai.slinky.activity;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +7,10 @@ import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -23,8 +26,17 @@ import java.util.List;
 /**
  * Created by Administrator on 2017/3/16.
  */
-public class Club extends Activity {
-    public String teamtitle,teamtype,teaminfo;
+public class Club extends AppCompatActivity {
+
+    public static final String TAG = "com.lai.slinky.activity.Club.shetuanservice";
+    public static final String TAG1 = "com.lai.slinky.Service.ClubService";
+    static final String StringSeclectInfo = "serviceSeclect";
+    static final String StringClubAllInfo = "club_all_info";
+    static final String StringByteArray= "byteArray";
+    static final String StringUserInfo = "userinfo";
+    static final String StringClubId = "clubId";
+
+    public String teamtitle,teamtype,teaminfo,teamPreName,teamNum;
     String partyInfo;
     public int teamid;
     public int ifHasPermission = 0;
@@ -32,34 +44,62 @@ public class Club extends Activity {
     //存储用户是否有管理社团权限,因为有三个逻辑结果所以用-1，0，1标识
     //0标识还未得到结果，-1标识结果为非，1标识结果为真
     ServiceReceiver serviceReceiver = new ServiceReceiver();
-    static final String StringSeclectInfo = "serviceSeclect";
-    static final String StringClubName = "clubInfo";
-    static final String StringPartyInfo= "partyInfo";
-    static final String StringClubId = "clubId";
-    static final String StringUserInfo = "userinfo";
+    Toolbar toolbar;
+    CollapsingToolbarLayout collapsingToolbarLayout;
+    FloatingActionButton fab;
+
     List<team> listData = new ArrayList<team>();
-    public static final String TAG = "com.lai.slinky.activity.Club.shetuanservice";
-    public static final String TAG1 = "com.lai.slinky.Service.ClubService";
     Intent intent;
+    team ta;
+    byte[] plb;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.club_version_content);
 
         //获取控件
-        TextView club_name = (TextView) findViewById(R.id.club_name);
-        TextView club_president_name = (TextView) findViewById(R.id.club_president_name);
+        TextView club_president_name = (TextView) findViewById(R.id.club_version_realszname);
+        TextView club_info = (TextView)findViewById(R.id.club_version_realinfo);
+        TextView club_member = (TextView)findViewById(R.id.club_version_realmanager);
+        TextView club_num = (TextView)findViewById(R.id.club_version_realnum);
+        ImageView club_image = (ImageView)findViewById(R.id.club_image);
 
-        //获取上个窗口所传递社团信息
+        toolbar = (Toolbar)findViewById(R.id.toolbar);
+        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
+        fab = (FloatingActionButton)findViewById(R.id.fab);
+        //获取上个窗口所传递社团信息 userInfo Logo和类中信息：Id，title,type,charge1,info,partyPlace,partyNum
+        ta = getIntent().getParcelableExtra(StringClubAllInfo);
+        plb = getIntent().getByteArrayExtra(StringByteArray);
+
         userinfo = getIntent().getStringArrayExtra("userinfo");
-        teamid = getIntent().getIntExtra("teamid",-1);//后一个参数：若没取到赋值-1
-        teamtitle = getIntent().getStringExtra("teamtitle");
-        teamtype = getIntent().getStringExtra("teamtype");
-        teaminfo = getIntent().getStringExtra("teaminfo");
+        teamid = ta.getId();//后一个参数：若没取到赋值-1
+        teamtitle = ta.getTitle();
+        Log.e("teamtitle11",teamtitle);
+        teamtype = ta.getType();
+        teaminfo = ta.getInfo();
+        teamPreName = ta.getCharge1();
+        teamNum = String.valueOf(ta.getPartyNum());
+
+        Bitmap partyLogoBm = BitmapFactory.decodeByteArray(plb,0,plb.length);
+
+        setSupportActionBar(toolbar);
+        if(getSupportActionBar() != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
 
         //更新控件信息
-        club_name.setText(teamtitle);
-        club_president_name.setText(teaminfo);
+        /**
+         * 设置文章标题
+         */
+        collapsingToolbarLayout.setTitle(teamtitle);
+        /**
+         * 设置封面
+         */
+        club_image.setImageBitmap(partyLogoBm);
+        club_president_name.setText(teamPreName);
+        club_info.setText(teaminfo);
+        club_num.setText(teamNum);
 
         //通过广播与Service保持通信
         serviceReceiver = new ServiceReceiver();
@@ -91,9 +131,10 @@ public class Club extends Activity {
         **点击事件
         **社团管理，要求权限
          */
-        findViewById(R.id.club_manage_btn).setOnClickListener(new View.OnClickListener(){
+        //FloatingActionButton社团管理监听
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 //先判断用户是否拥有权利
                 if(ifHasPermission == 0){
                     //还未查到，提示
@@ -107,10 +148,8 @@ public class Club extends Activity {
                 else{
                     //用户拥有权限，跳转并传递基本信息
                     Log.e("============>>>>","有权限");
-
                     //将社团信息录入
-                    b0.putString(StringPartyInfo,partyInfo);
-                    b0.putString(StringClubName, teamtitle);
+                    b0.putParcelable(StringClubAllInfo,ta);
                     Intent i = new Intent(Club.this,ClubManager.class);
                     i.putExtras(b0);
                     startActivity(i);
@@ -177,6 +216,10 @@ public class Club extends Activity {
             teamtitle = intent.getStringExtra("partyName");
             partyInfo = intent.getStringExtra("partyMemo");
 
+            //及时更新
+            ta.setTitle(teamtitle);
+            ta.setInfo(partyInfo);
+
             //直接用intent传递Bitmap，不能超过40K，否则会程序崩溃,所以改为传递字节流
             //            Bitmap partyLogoBm = intent.getParcelableExtra("partyLogo");
             byte[] plb = intent.getByteArrayExtra("partyLogo");
@@ -193,13 +236,12 @@ public class Club extends Activity {
 
 //            team tm = listData.get(0);
 
-            TextView club_name = (TextView) findViewById(R.id.club_name);
-            ImageView club_icon = (ImageView)findViewById(R.id.club_icon);
-            TextView club_info = (TextView)findViewById(R.id.club_club_info);
+            ImageView club_icon = (ImageView)findViewById(R.id.club_image);
+            TextView club_info = (TextView)findViewById(R.id.club_version_realinfo);
 
 //            club_icon.setImageBitmap(tm.getPartyLogo());
 //            club_info.setText(tm.getInfo());
-            club_name.setText(teamtitle);
+            collapsingToolbarLayout.setTitle(teamtitle);
             club_icon.setImageBitmap(partyLogoBm);
             club_info.setText(partyInfo);
             //更新数据

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="1dp"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_centerVertical="true"
+            android:layout_margin="8dp"
+            android:id="@+id/item_club_adapter_iv"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/item_club_adapter_iv"
+            android:layout_marginRight="8dp"
+            android:layout_toRightOf="@+id/item_club_adapter_iv"
+            android:lines="2"
+            android:id="@+id/item_club_adapter_title"
+            android:textSize="18sp"
+            android:text="社团名"
+            android:textColor="@color/colorBlack" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/item_club_adapter_title"
+            android:layout_toRightOf="@+id/item_club_adapter_iv"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="2dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:id="@+id/item_club_adapter_info"
+            android:text="社团信息"
+            android:textSize="14sp"
+            android:textColor="@color/colorBlack" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="8dp"
+            android:layout_below="@id/item_club_adapter_info"
+            android:layout_marginBottom="4dp"
+            android:id="@+id/item_club_adapter_charge"
+            android:text="社长"
+            android:textSize="12sp"
+            android:textColor="@color/colorBlack"/>
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

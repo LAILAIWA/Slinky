@@ -21,15 +21,18 @@ import com.lai.slinky.R;
 import com.lai.slinky.RecyclerView.DividerItemDecoration;
 import com.lai.slinky.RecyclerView.GeneralAdapter;
 import com.lai.slinky.RecyclerView.ObjectModel;
-import com.lai.slinky.activity.Club;
 import com.lai.slinky.Service.localService;
+import com.lai.slinky.activity.Club;
 import com.lai.slinky.model.team;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class TwoFragment extends LazyFragment implements SwipeRefreshLayout.OnRefreshListener {
+public class TwoFragment extends LazyFragment implements SwipeRefreshLayout.OnRefreshListener{
 
+    public static final String TAG = "com.lai.slinky.fragment.shetuanservice";
+    static final String StringClubAllInfo = "club_all_info";
+    static final String StringByteArray= "byteArray";
+    static final String StringClubNum= "clubNum";
     Context context = getActivity();
     private RecyclerView mRecyclerView;
     private ArrayList<ObjectModel> mData;
@@ -43,10 +46,13 @@ public class TwoFragment extends LazyFragment implements SwipeRefreshLayout.OnRe
     ArrayList teamid = new ArrayList();
     ArrayList teamtitle = new ArrayList();
     ArrayList teaminfo = new ArrayList();
-    List<team> listData = new ArrayList<team>();
+    ArrayList<team> listData = new ArrayList<team>();
+    ArrayList<byte[]> LogoArray = new ArrayList<byte[]>();
+
+
     ServiceReceiver serviceReceiver = new ServiceReceiver();
     ProgressDialog PD;
-    public static final String TAG = "com.lai.slinky.fragment.shetuanservice";
+
 
 
 //    //保持所启动的Service的IBinder对象
@@ -90,30 +96,46 @@ public class TwoFragment extends LazyFragment implements SwipeRefreshLayout.OnRe
         @Override
         public void onReceive(Context context, Intent intent) {
             //获取Intent中的消息
-            teamid = intent.getIntegerArrayListExtra("teamid");
-            Log.e("============>>>>","getteamid");
-            teamtitle = intent.getParcelableArrayListExtra("teamtitle");
-            Log.e("============>>>>","getteamtitle");
-            teamtype = intent.getStringArrayExtra("teamtype");
-            Log.e("============>>>>","getteamtype");
-            teaminfo = intent.getParcelableArrayListExtra("teaminfo");
-            Log.e("============>>>>","getteamtitle");
-            int num = intent.getIntExtra("num",0);
 
             //重要！先清除再添加
             listData.clear();
 
-            for (int i = 0; i < num; i++) {
-                team ta = new team((int)teamid.get(i),teamtitle.get(i).toString(),teamtype[0],teaminfo.get(i).toString());
-                listData.add(ta);
+            //获取Intent中的消息,尝试通过复制的方式
+            ArrayList<team> list1 = intent.getParcelableArrayListExtra(StringClubAllInfo);
+            for(int i = 0;i < list1.size();i++){
+                listData.add(i,list1.get(i));
             }
+
+            Log.e("listData1Title->",listData.get(0).getTitle());
+
+
+            //因为Logo要单独传递，所以循环接收
+            int actNum = intent.getIntExtra(StringClubNum,1);
+            Log.e("----ActNum----", String.valueOf(actNum));
+            byte[] plb;
+            for(int n = 0;n < actNum;n++){
+                plb = intent.getByteArrayExtra(StringByteArray + n);
+                LogoArray.add(plb);
+            }
+
+
+
+            //更新适配器数据
+            mAdapter.notifyDataSetChanged();
+
+//            teamid = intent.getIntegerArrayListExtra("teamid");
+//            Log.e("============>>>>","getteamid");
+//            teamtitle = intent.getParcelableArrayListExtra("teamtitle");
+//            Log.e("============>>>>","getteamtitle");
+//            teamtype = intent.getStringArrayExtra("teamtype");
+//            Log.e("============>>>>","getteamtype");
+//            teaminfo = intent.getParcelableArrayListExtra("teaminfo");
+//            Log.e("============>>>>","getteamtitle");
+//            int num = intent.getIntExtra("num",0);
 
             //根据获取信息，改变RecyclerView信息
 //            PD.dismiss();//dialog结束
             Log.e("============>>>>","PDdismiss");
-
-            //更新适配器数据
-            mAdapter.notifyDataSetChanged();
         }
     }
 
@@ -162,14 +184,14 @@ public class TwoFragment extends LazyFragment implements SwipeRefreshLayout.OnRe
 //        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         //创建适配器
-        mAdapter = new GeneralAdapter(mActivity,listData);
+        mAdapter = new GeneralAdapter(mActivity,listData,LogoArray);
         //设置设配器
         mRecyclerView.setAdapter(mAdapter);
 
-        //添加水平分割线,想要改变水平分割线的风格可以在主题中通过改变listDivider来设置
-        mDecoration = new DividerItemDecoration(mActivity, DividerItemDecoration.VERTICAL_LIST);
-        mDecoration.setDividerHeight(15);
-        mRecyclerView.addItemDecoration(mDecoration);
+//        //添加水平分割线,想要改变水平分割线的风格可以在主题中通过改变listDivider来设置
+//        mDecoration = new DividerItemDecoration(mActivity, DividerItemDecoration.VERTICAL_LIST);
+//        mDecoration.setDividerHeight(15);
+//        mRecyclerView.addItemDecoration(mDecoration);
         /*
         CustomAdapter adapter = new CustomAdapter(initData());
         adapter.setOnClickListener(new CustomAdapter.OnClickListener() {
@@ -181,7 +203,7 @@ public class TwoFragment extends LazyFragment implements SwipeRefreshLayout.OnRe
         */
 
         //添加监听回调
-        mAdapter.setClickListener(new GeneralAdapter.ItemClickListener(){
+        mAdapter.setClickListener(new GeneralAdapter.OnItemClickListener(){
             @Override
             public void OnItemClick(View view, int position) {
                 Log.e("-----Item clicked-----",String.valueOf(position));
@@ -190,14 +212,17 @@ public class TwoFragment extends LazyFragment implements SwipeRefreshLayout.OnRe
                 team ta = listData.get(position);
                 Bundle bb = new Bundle();
                 bb.putStringArray("userinfo",userInfo);//用户信息还需在查询权限用到
-                bb.putInt("teamid",ta.getId());
-                bb.putString("teamtitle",ta.getTitle());
-                bb.putString("teamtype",ta.getType());
-                bb.putString("teaminfo",ta.getCharge1());
-                Log.e("--ItemToClub title--",String.valueOf(ta.getId()));
-                Log.e("--ItemToClub title--",String.valueOf(ta.getTitle()));
-                Log.e("--ItemToClub type--",String.valueOf(ta.getType()));
-                Log.e("--ItemToClub info--",String.valueOf(ta.getCharge1()));
+//                bb.putInt("teamid",ta.getId());
+//                bb.putString("teamtitle",ta.getTitle());
+//                bb.putString("teamtype",ta.getType());
+//                bb.putString("teaminfo",ta.getCharge1());
+//                Log.e("--ItemToClub title--",String.valueOf(ta.getId()));
+//                Log.e("--ItemToClub title--",String.valueOf(ta.getTitle()));
+//                Log.e("--ItemToClub type--",String.valueOf(ta.getType()));
+//                Log.e("--ItemToClub info--",String.valueOf(ta.getCharge1()));
+                //分别传递Logo和类中信息：Id，title,type,charge1,info,partyPlace,partyNum
+                bb.putByteArray(StringByteArray,LogoArray.get(position));
+                bb.putParcelable(StringClubAllInfo,listData.get(position));
                 //跳转动作
                 Intent itoclub = new Intent(getActivity(), Club.class);
                 itoclub.putExtras(bb);

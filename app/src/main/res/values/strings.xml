@@ -10,6 +10,7 @@
     <string name="password">密码</string>
     <string name="nickname">昵称</string>
 
+    <string name="transition_photos">transition_animation_news_photos</string>
 
     <string name="mine_item_activity">活 动</string>
     <string name="mine_item_appstore">应用推荐</string>

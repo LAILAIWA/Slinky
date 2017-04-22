@@ -8,25 +8,49 @@ import android.os.Parcelable;
  * Created by Administrator on 2017/3/5.
  */
 public class team implements Parcelable {
+    public static final String TAG = "Team";
+
+    public static final String CLUB = "社团";
+
+    public static final String CLASS = "班级";
+
     private int id;
     private String title;
-    private String type;
+    private String type;//组织类别：社团，班级
     private String charge1;
-    private String charge2;
     private String info;
-    private String place;
+    private String partyPlace;
+    private int partyNum;
+
     private Bitmap partyLogo;
+
+    private String teacher;
+    private String grade;
     public team(){
     }
-    public team(int id,String title,String type,String charge1){
+
+
+    public team(int id,String title,String type,String charge1,String info,String partyPlace,int partyNum){
         this.id = id;
         this.title = title;
         this.type = type;
         this.charge1 = charge1;
+        this.info = info;
+        this.partyPlace = partyPlace;
+        this.partyNum = partyNum;
     }
+
     public team(String info,Bitmap partyLogo){
         this.info = info;
         this.partyLogo = partyLogo;
+    }
+
+    public team(int id,String title,String type,String teacher,String grade){
+        this.id = id;
+        this.title = title;
+        this.type = type;
+        this.teacher = teacher;
+        this.grade = grade;
     }
 
     public void setId(int id) {
@@ -45,20 +69,28 @@ public class team implements Parcelable {
         this.charge1 = charge1;
     }
 
-    public void setCharge2(String charge2) {
-        this.charge2 = charge2;
-    }
-
     public void setInfo(String info) {
         this.info = info;
     }
 
-    public void setPlace(String place) {
-        this.place = place;
+    public void setPartyPlace(String partyPlace) {
+        this.partyPlace = partyPlace;
+    }
+
+    public void setPartyNum(int partyNum) {
+        this.partyNum = partyNum;
     }
 
     public void setPartyLogo(Bitmap partyLogo) {
         this.partyLogo = partyLogo;
+    }
+
+    public void setTeacher(String teacher) {
+        this.teacher = teacher;
+    }
+
+    public void setGrade(String grade) {
+        this.grade = grade;
     }
 
     public int getId() {
@@ -77,20 +109,28 @@ public class team implements Parcelable {
         return charge1;
     }
 
-    public String getCharge2() {
-        return charge2;
-    }
-
     public String getInfo() {
         return info;
     }
 
-    public String getPlace() {
-        return place;
+    public String getPartyPlace() {
+        return partyPlace;
+    }
+
+    public int getPartyNum() {
+        return partyNum;
     }
 
     public Bitmap getPartyLogo() {
         return partyLogo;
+    }
+
+    public String getTeacher() {
+        return teacher;
+    }
+
+    public String getGrade() {
+        return grade;
     }
 
     @Override
@@ -103,9 +143,13 @@ public class team implements Parcelable {
         // TODO Auto-generated method stub
         // 1.必须按成员变量声明的顺序封装数据，不然会出现获取数据出错 
         // 2.序列化对象 
+        arg0.writeInt(id);
         arg0.writeString(title);
         arg0.writeString(type);
+        arg0.writeString(charge1);
         arg0.writeString(info);
+        arg0.writeString(partyPlace);
+        arg0.writeInt(partyNum);
     }
     // 1.必须实现Parcelable.Creator接口,否则在获取Person数据的时候，会报错，如下： 
     // android.os.BadParcelableException: 
@@ -120,9 +164,13 @@ public class team implements Parcelable {
             // TODO Auto-generated method stub
             // 必须按成员变量声明的顺序读取数据，不然会出现获取数据出错
             team p = new team();
+            p.setId(source.readInt());
             p.setTitle(source.readString());
             p.setType(source.readString());
+            p.setCharge1(source.readString());
             p.setInfo(source.readString());
+            p.setPartyPlace(source.readString());
+            p.setPartyNum(source.readInt());
             return p;
         }
 

@@ -212,4 +212,10 @@ public class ActivityFragment extends LazyFragment {
         //注册BroadcastReceiver
         getActivity().registerReceiver(serviceReceiver, filter);
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getActivity().unregisterReceiver(serviceReceiver);
+    }
 }

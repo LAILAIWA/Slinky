@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.lai.slinky.R;
 import com.lai.slinky.Service.ClubService;
 import com.lai.slinky.fragment.LazyFragment;
+import com.lai.slinky.model.team;
 
 /**
  * Created by Administrator on 2017/4/4.
@@ -25,9 +26,11 @@ public class InfoFragement extends LazyFragment {
 
     public static final String TAG = "com.lai.slinky.fragment.clubManager.InfoFragment";
     static final String StringSeclectInfo = "serviceSeclect";
+    static final String StringClubAllInfo = "club_all_info";
+    static final String StringUserInfo = "userinfo";
+
     static final String StringClubName = "clubInfo";
     static final String StringClubId = "clubId";
-    static final String StringUserInfo = "userinfo";
     static final String StringPartyInfo= "partyInfo";
     static final String StringIfInfoUpadated= "ifUpdateSuccessed";
     private String partyInfoString,clubNameString;
@@ -37,6 +40,7 @@ public class InfoFragement extends LazyFragment {
     String mTitle;
     View view;
     EditText clubName,clubInfo;
+    team ta;
 
     @Override
     protected int getLayoutID() {
@@ -48,8 +52,11 @@ public class InfoFragement extends LazyFragment {
         view = inflater.inflate(R.layout.fragment_info,null);
         mTitle = getArguments().getString("title");
         //接收传递信息，社团简介，社团名
-        partyInfoString = this.getActivity().getIntent().getStringExtra(StringPartyInfo);
-        clubNameString = this.getActivity().getIntent().getStringExtra(StringClubName);
+        ta = this.getActivity().getIntent().getParcelableExtra(StringClubAllInfo);
+//        partyInfoString = this.getActivity().getIntent().getStringExtra(StringPartyInfo);
+//        clubNameString = this.getActivity().getIntent().getStringExtra(StringClubName);
+        partyInfoString = ta.getInfo();
+        clubNameString = ta.getTitle();
         clubName = (EditText)view.findViewById(R.id.fragment_info_club_realname);
         clubInfo = (EditText)view.findViewById(R.id.fragment_info_club_info);
         clubName.setText(clubNameString);
