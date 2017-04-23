@@ -78,7 +78,7 @@ public class Login extends Activity{
                                 Bundle bundlee = new Bundle();
                                 bundlee.putStringArray("userInfo",strings);
                                 //登陆成功，跳转
-                                Intent i = new Intent(Login.this, MainFace.class);
+                                Intent i = new Intent(Login.this, MainActivity.class);
                                 i.putExtras(bundlee);
 
                                 startActivity(i);
