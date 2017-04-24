@@ -92,6 +92,7 @@ public class Club extends AppCompatActivity {
         /**
          * 设置文章标题
          */
+        collapsingToolbarLayout.setCollapsedTitleTextColor(getResources().getColor(R.color.colorBlack));
         collapsingToolbarLayout.setTitle(teamtitle);
         /**
          * 设置封面

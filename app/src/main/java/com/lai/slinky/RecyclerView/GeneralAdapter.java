@@ -6,7 +6,6 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,7 +55,6 @@ public class GeneralAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         } else if(mDatas.get(position) == null){
             return PROGRESS_VIEW;
         } else if(mDatas.get(position).getType().equals(team.CLUB)){
-            Log.e("00000Type000","CLUB");
             return CLUB_VIEW;
         } else if(mDatas.get(position).getType().equals(team.CLASS)){
             return CLASS_VIEW;

@@ -71,6 +71,11 @@
             android:label=""
             android:launchMode="singleInstance">
         </activity>
+        <activity
+            android:name=".activity.Inform"
+            android:label=""
+            android:launchMode="singleInstance">
+        </activity>
         <service
             android:name=".Service.localService">
             <intent-filter>

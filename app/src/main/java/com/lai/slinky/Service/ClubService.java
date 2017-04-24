@@ -10,6 +10,7 @@ import android.util.Log;
 import com.lai.slinky.Util;
 import com.lai.slinky.model.activityy;
 import com.lai.slinky.model.apply;
+import com.lai.slinky.model.inform;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -32,23 +33,28 @@ public class ClubService extends IntentService {
     public static final String TAG1 = "com.lai.slinky.fragment.clubManager.InfoFragment";//InfoFragment服务
     public static final String TAG2 = "com.lai.slinky.fragment.clubManager.MemberFragment";//MemberFragment服务
     public static final String TAG3 = "com.lai.slinky.fragment.clubManager.ActivityFragment";//ActivityFragment服务
+    public static final String TAG4 = "com.lai.slinky.fragment.clubManager.InformFragment";//InformFragment服务
     static final String StringSeclectInfo = "serviceSeclect";
     static final String StringClubName = "clubInfo";
     static final String StringClubId = "clubId";
     static final String StringPartyInfo= "partyInfo";
     static final String StringIfInfoUpadated= "ifUpdateSuccessed";
+    //manage_club_member
     static final String StringListJoin= "listjoin";
     static final String StringListQuit= "listquit";
     //select_club_activity
     static final String StringActivityList= "listActivity";
     static final String StringByteArray= "byteArray";
     static final String StringActNum= "actNum";
+    //select_club_inform
+    static final String StringInformList = "informlist";
 
 
     Util util = new Util();
     apply ta = new apply();
     apply ta1 = new apply();
     activityy act = new activityy();
+    inform inf = new inform();
     public ClubService(){
         super("ClubService");
     }
@@ -227,8 +233,72 @@ public class ClubService extends IntentService {
             sendBroadcast(i1);
 
         }
-        else if(serviceSeclect.equals("manage_club_inform")){
+        else if(serviceSeclect.equals("select_club_inform")){
+            //查询社团通知表，返回某个查询社团的社团通知信息
+            ArrayList<inform> listData = new ArrayList<inform>();
 
+            ArrayList ListInformId = new ArrayList();
+            ArrayList ListInformName= new ArrayList();
+            ArrayList ListContent = new ArrayList();
+            ArrayList ListMemo = new ArrayList();
+
+            int clubId = bb.getInt(StringClubId);
+            Log.e("--clubId-->",String.valueOf(clubId));
+
+            //分别查找入团申请表，退团申请表，找出所有申请
+            String sql ="select * from Slinky.Inform_table where PartyId = '" + clubId + "';";
+            ResultSet resultSet = util.selectSQL(sql);
+
+            int num = 0;//记录申请数目
+            try{
+                while (resultSet.next()){
+                    //获得每次得到的通知ID
+                    ListInformId.add(num,-1);
+                    int InformId = resultSet.getInt("NoticeId");
+                    ListInformId.set(num,InformId);
+                    Log.e("----InformId----->",String.valueOf(InformId));
+
+                    //获得每次得到的通知标题
+                    ListInformName.add(num,"");
+                    String InformName = resultSet.getString("NoticeName");
+                    ListInformName.set(num,InformName);
+                    Log.e("----InformName----->",String.valueOf(InformName));
+
+                    //获得每次得到的通知内容
+                    ListContent.add(num,"");
+                    String Content = resultSet.getString("Content");
+                    ListContent.set(num,Content);
+                    Log.e("----Content----->",String.valueOf(Content));
+
+                    //获得每次得到的通知备注
+                    ListMemo.add(num,"");
+                    String Memo = "未设置备注";
+                    Memo = resultSet.getString("Memo");
+                    if(Memo == null){
+                        ListMemo.set(num,"未设置备注");//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!判空要更新到所有类似的任务里面
+                    }else
+                        ListMemo.set(num,Memo);
+                    Log.e("----Memo----->",String.valueOf(Memo));
+
+                    inf = new inform((int)ListInformId.get(num), ListInformName.get(num).toString(), ListContent.get(num).toString(), clubId, ListMemo.get(num).toString());
+                    listData.add(inf);
+                    num++;
+                    Log.e("========>>>>",inf.getInformTitle());
+                }
+            }catch(Exception ex){
+                Log.e("==================","数据库错误-通知表");
+                ex.printStackTrace();
+            }
+            //传递list
+            Bundle teamBundle = new Bundle();
+            teamBundle.putInt(StringClubId,clubId);
+            teamBundle.putParcelableArrayList(StringInformList,listData);
+
+            Log.e("============>>>>","sendBroadcast");
+            //传送结果广播回UI,参数很关键，连接钥匙
+            Intent i1 = new Intent(TAG4);
+            i1.putExtras(teamBundle);
+            sendBroadcast(i1);
         }
         else if(serviceSeclect.equals("select_club_activity")){
             //查询社团活动表，注意不是活动申请表

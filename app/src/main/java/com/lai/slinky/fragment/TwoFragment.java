@@ -188,10 +188,10 @@ public class TwoFragment extends LazyFragment implements SwipeRefreshLayout.OnRe
         //设置设配器
         mRecyclerView.setAdapter(mAdapter);
 
-//        //添加水平分割线,想要改变水平分割线的风格可以在主题中通过改变listDivider来设置
-//        mDecoration = new DividerItemDecoration(mActivity, DividerItemDecoration.VERTICAL_LIST);
-//        mDecoration.setDividerHeight(15);
-//        mRecyclerView.addItemDecoration(mDecoration);
+        //添加水平分割线,想要改变水平分割线的风格可以在主题中通过改变listDivider来设置
+        mDecoration = new DividerItemDecoration(mActivity, DividerItemDecoration.VERTICAL_LIST);
+        mDecoration.setDividerHeight(10);
+        mRecyclerView.addItemDecoration(mDecoration);
         /*
         CustomAdapter adapter = new CustomAdapter(initData());
         adapter.setOnClickListener(new CustomAdapter.OnClickListener() {

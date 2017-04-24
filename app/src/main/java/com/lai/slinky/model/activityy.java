@@ -26,7 +26,7 @@ public class activityy implements Parcelable {
     public activityy(){
     }
 
-    public activityy(int actId, String actName, int partyId, String organizer, String telephone, String notice, int buildingId, String actPlace, int actNumber, int stateId, String memo, String StartTime, String EndTime) {
+    public activityy(int actId, String actName, int partyId, String organizer, String telephone, String notice, int buildingId, String actPlace, int actNumber, int stateId, String memo, String startTime, String endTime) {
         ActId = actId;
         ActName = actName;
         PartyId = partyId;
@@ -38,6 +38,8 @@ public class activityy implements Parcelable {
         ActNumber = actNumber;
         StateId = stateId;
         Memo = memo;
+        StartTime = startTime;
+        EndTime = endTime;
     }
 
     public int getActId() {

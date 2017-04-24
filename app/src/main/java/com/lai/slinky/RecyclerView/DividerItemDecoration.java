@@ -3,9 +3,11 @@ package com.lai.slinky.RecyclerView;
 /**
  * Created by Administrator on 2017/3/3.
  */
+
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.v4.view.ViewCompat;
@@ -52,6 +54,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
      */
     @Override
     public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+        c.drawColor(Color.WHITE);
         if (mOrientation == VERTICAL_LIST) {
             drawVertical(c, parent);
         } else {

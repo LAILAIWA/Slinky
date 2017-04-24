@@ -19,7 +19,7 @@
             android:layout_height="match_parent"
             android:id="@+id/toolbar_layout"
             android:fitsSystemWindows="true"
-            app:contentScrim="?attr/colorPrimary"
+            app:contentScrim="?attr/colorPrimaryDark"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:expandedTitleMarginStart="48dp"
             app:expandedTitleMarginEnd="48dp"
@@ -109,7 +109,7 @@
                         android:layout_toEndOf="@id/club_version_info"
                         android:layout_marginTop="5dp"
                         android:layout_marginStart="0dp"
-                        android:layout_marginEnd="10dp"
+                        android:layout_marginEnd="30dp"
                         android:background="@drawable/corners_black"
                         app:layout_behavior="@string/appbar_scrolling_view_behavior">
                         <TextView
@@ -143,7 +143,7 @@
                         android:layout_toEndOf="@id/club_version_manager"
                         android:layout_marginTop="5dp"
                         android:layout_marginStart="0dp"
-                        android:layout_marginEnd="10dp"
+                        android:layout_marginEnd="30dp"
                         android:background="@drawable/corners_black"
                         app:layout_behavior="@string/appbar_scrolling_view_behavior">
                         <TextView
