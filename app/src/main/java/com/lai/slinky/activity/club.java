@@ -33,7 +33,7 @@ public class Club extends AppCompatActivity {
     static final String StringSeclectInfo = "serviceSeclect";
     static final String StringClubAllInfo = "club_all_info";
     static final String StringByteArray= "byteArray";
-    static final String StringUserInfo = "userinfo";
+    static final String StringUserInfo = "userInfo";
     static final String StringClubId = "clubId";
 
     public String teamtitle,teamtype,teaminfo,teamPreName,teamNum;

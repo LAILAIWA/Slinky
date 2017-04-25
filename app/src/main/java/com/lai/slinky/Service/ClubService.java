@@ -261,13 +261,21 @@ public class ClubService extends IntentService {
                     //获得每次得到的通知标题
                     ListInformName.add(num,"");
                     String InformName = resultSet.getString("NoticeName");
-                    ListInformName.set(num,InformName);
+                    if(InformName == null){
+                        ListInformName.set(num,"未设置标题");
+                    }else{
+                        ListInformName.set(num,InformName);
+                    }
                     Log.e("----InformName----->",String.valueOf(InformName));
 
                     //获得每次得到的通知内容
                     ListContent.add(num,"");
                     String Content = resultSet.getString("Content");
-                    ListContent.set(num,Content);
+                    if(Content == null){
+                        ListContent.set(num,"未设置内容");
+                    }else{
+                        ListContent.set(num,Content);
+                    }
                     Log.e("----Content----->",String.valueOf(Content));
 
                     //获得每次得到的通知备注

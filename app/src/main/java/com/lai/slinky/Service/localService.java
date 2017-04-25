@@ -10,6 +10,7 @@ import android.util.Log;
 
 import com.lai.slinky.R;
 import com.lai.slinky.Util;
+import com.lai.slinky.model.inform;
 import com.lai.slinky.model.team;
 
 import java.io.ByteArrayOutputStream;
@@ -31,20 +32,25 @@ public class localService extends IntentService {
     // 1.查询数据库所有社团
     // 2.查询用户所参加社团
     // 3.查询某个社团信息
+    // 4.查询用户所参加社团的通知信息
 
     //这三个服务所需要的必要信息分别为1.无 2.用户ID（该服务是专用服务，另外模块调用） 3.社团ID，用户ID
     //所以可调整，服务一提前执行，服务三先查好用户ID需查信息
 
     public static final String TAG = "com.lai.slinky.fragment.shetuanservice";
     public static final String TAG1 = "com.lai.slinky.activity.Club.shetuanservice";
+    public static final String TAG2 = "com.lai.slinky.fragment.OneFragment";
     static final String StringSeclectInfo = "serviceSeclect";
     static final String StringArrayName = "userInfo";
     static final String StringClubInfo = "clubInfo";
     static final String StringClubId = "clubId";
-    static final String StringUserInfo = "userinfo";
+    static final String StringUserInfo = "userInfo";
     static final String StringClubAllInfo = "club_all_info";
     static final String StringByteArray= "byteArray";
     static final String StringClubNum= "clubNum";
+    //select_own_inform
+    static final String StringInformNum = "informNum";
+    static final String StringInformList = "informlist";
     Util util = new Util();
     team ta = new team();
 //    private int count;
@@ -84,33 +90,6 @@ public class localService extends IntentService {
             int PartyId,PartyNum;
             Bitmap partyLogo = ((BitmapDrawable) getResources().getDrawable(R.drawable.icon_club)).getBitmap();
             byte[] plb = new byte[10240];
-
-//            //先取出请求者发送的社团基本信息
-//            Bundle bbb = intent.getExtras();
-//            int clubId = bbb.getInt(StringClubId);
-//            Log.e("---clubString---->",String.valueOf(clubId));//社团ID
-//            //获得用户信息用于查询权限
-//            String[] userinfo = bbb.getStringArray(StringUserInfo);
-//            Log.e("---userId---->",userinfo[0]);//用户Id
-//
-//            //加工ArrayList<>用于bundle传输
-//            ArrayList bl = new ArrayList();
-//            bl.add(listData);
-//
-//            Bundle teamBundle = new Bundle();
-//            teamBundle.putString("partyName",getPartyName);
-//            teamBundle.putInt("permission",ifHasPermission);
-//            teamBundle.putParcelableArrayList("teamLogoMemo",bl);
-//            teamBundle.putString("partyMemo",partyMemo);
-//            teamBundle.putByteArray("partyLogo",plb);
-//            //直接用intent传递Bitmap，不能超过40K，否则会程序崩溃
-////            teamBundle.putParcelable("partyLogo",partyLogo);
-//
-//            Log.e("============>>>>","sendBroadcast");
-//            //传送结果广播回UI,参数很关键，连接钥匙
-//            Intent i1 = new Intent(TAG1);
-//            i1.putExtras(teamBundle);
-//            sendBroadcast(i1);
 
             String[] strings = bb.getStringArray(StringArrayName);
             Log.e("----strings0----->",strings[0]);
@@ -460,7 +439,110 @@ public class localService extends IntentService {
             //不必关闭连接，若关闭则若用户应用内二次进入出现bug。
 //          util.CloseConn();
         }
-        else{
+        else if(serviceSeclect.equals("select_own_inform")){
+            //分别查找，用户社团表，社团通知表，返回用户所参加社团的通知信息，注意社团名
+            //查询社团通知表，返回某个查询社团的社团通知信息
+            ArrayList<inform> listDataInf = new ArrayList<inform>();
+            inform inf = new inform();
+
+            ArrayList ListPartyId = new ArrayList();
+            ArrayList ListPartyName = new ArrayList();
+            ArrayList ListInformId = new ArrayList();
+            ArrayList ListInformName= new ArrayList();
+            ArrayList ListContent = new ArrayList();
+            ArrayList ListMemo = new ArrayList();
+
+            String[] UserInfo = bb.getStringArray(StringUserInfo);
+            Log.e("--UserId-->",String.valueOf(UserInfo[0]));
+            String UserId = UserInfo[0];
+
+            //首先用UserId查询用户社团表，查找用户参加社团
+            String sql ="select PartyId from Slinky.UserParty_table where UserId = '" + UserId + "';";
+            ResultSet resultSet = util.selectSQL(sql);
+            int num = 0;//记录社团数目
+            int num1 = 0;//记录通知数目
+            try{
+                while (resultSet.next()){
+                    ListPartyId.add(num,-1);
+                    int PartyId = resultSet.getInt("PartyId");
+                    ListPartyId.set(num,PartyId);
+                    Log.e("----PartyId----->",String.valueOf(PartyId));
+
+                    String sql1 ="select PartyName from Slinky.Party_table where PartyId = '" + PartyId + "';";
+                    ResultSet resultSet1 = util.selectSQL(sql1);
+                    resultSet1.next();
+                    ListPartyName.add(num,-1);
+                    String PartyName = resultSet1.getString("PartyName");
+                    if(PartyName == null){
+                        ListPartyName.set(num,"未设置社团名");
+                    }else{
+                        ListPartyName.set(num,PartyName);
+                    }
+                    Log.e("----PartyName----->",String.valueOf(PartyName));
+
+                    String sql2 ="select * from Slinky.Inform_table where PartyId = '" + PartyId + "';";
+                    ResultSet resultSet2 = util.selectSQL(sql2);
+                    while (resultSet2.next()) {
+                        ListInformId.add(num1, "");
+                        int InformId = resultSet2.getInt("NoticeId");
+                        ListInformId.set(num1, InformId);
+                        Log.e("----InformId----->", String.valueOf(InformId));
+
+                        //获得每次得到的通知标题
+                        ListInformName.add(num1,"");
+                        String InformName = resultSet2.getString("NoticeName");
+                        if(InformName == null){
+                            ListInformName.set(num1,"未设置标题");
+                        }else{
+                            ListInformName.set(num1,InformName);
+                        }
+                        Log.e("----InformName----->",String.valueOf(InformName));
+
+                        //获得每次得到的通知内容
+                        ListContent.add(num1,"");
+                        String Content = resultSet2.getString("Content");
+                        if(Content == null){
+                            ListContent.set(num1,"未设置内容");
+                        }else{
+                            ListContent.set(num1,Content);
+                        }
+                        Log.e("----Content----->",String.valueOf(Content));
+
+                        //获得每次得到的通知备注
+                        ListMemo.add(num1,"");
+                        String Memo = "未设置备注";
+                        Memo = resultSet2.getString("Memo");
+                        if(Memo == null){
+                            ListMemo.set(num1,"未设置备注");//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!判空要更新到所有类似的任务里面
+                        }else
+                            ListMemo.set(num1,Memo);
+                        Log.e("----Memo----->",String.valueOf(Memo));
+
+                        inf = new inform((int)ListInformId.get(num1), ListInformName.get(num1).toString(), ListContent.get(num1).toString(), ListPartyName.get(num1).toString(), ListMemo.get(num1).toString());
+                        listDataInf.add(inf);
+                        num1++;
+                        Log.e("========>>>>",inf.getInformTitle());
+                    }
+                    num++;
+                }
+            }catch(Exception ex){
+                Log.e("==================","数据库错误-用户社团表");
+                ex.printStackTrace();
+            }
+
+            //传递list
+            Bundle teamBundle = new Bundle();
+            teamBundle.putInt(StringClubNum,num);
+            teamBundle.putInt(StringInformNum,num1);
+            teamBundle.putParcelableArrayList(StringInformList,listDataInf);
+
+            Log.e("============>>>>","sendBroadcast");
+            //传送结果广播回UI,参数很关键，连接钥匙
+            Intent i1 = new Intent(TAG2);
+            i1.putExtras(teamBundle);
+            sendBroadcast(i1);
+        }
+            else{
             Log.e("!!!!!!!!!!","cant find current service");
         }
     }

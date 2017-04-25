@@ -14,6 +14,8 @@ public class inform implements Parcelable {
     private int PartyId;
     private String Memo;
 
+    private String PartyName;
+
     public inform(){
     }
 
@@ -22,6 +24,14 @@ public class inform implements Parcelable {
         this.InformTitle = InformTitle;
         this.Content = Content;
         this.PartyId = PartyId;
+        this.Memo = Memo;
+    }
+
+    public inform(int InformId, String InformTitle, String Content, String PartyName, String Memo){
+        this.InformId = InformId;
+        this.InformTitle = InformTitle;
+        this.Content = Content;
+        this.PartyName = PartyName;
         this.Memo = Memo;
     }
 
@@ -65,6 +75,14 @@ public class inform implements Parcelable {
         Memo = memo;
     }
 
+    public String getPartyName() {
+        return PartyName;
+    }
+
+    public void setPartyName(String partyName) {
+        PartyName = partyName;
+    }
+
     @Override
     public int describeContents() {
         // TODO Auto-generated method stub
@@ -82,6 +100,7 @@ public class inform implements Parcelable {
         arg0.writeString(Content);
         arg0.writeInt(PartyId);
         arg0.writeString(Memo);
+        arg0.writeString(PartyName);
 
     }
     // 1.必须实现Parcelable.Creator接口,否则在获取Person数据的时候，会报错，如下： 
@@ -103,6 +122,7 @@ public class inform implements Parcelable {
             p.setContent(source.readString());
             p.setPartyId(source.readInt());
             p.setMemo(source.readString());
+            p.setPartyName(source.readString());
             return p;
         }
 
