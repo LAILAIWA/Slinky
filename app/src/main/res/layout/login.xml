@@ -18,8 +18,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="25dp"
-                android:textColor="@color/colorAccent"
-                android:text="wowo" />
+                android:textColor="@color/colorBlack"
+                android:text="Slinky" />
         </LinearLayout>
 
     </FrameLayout>
@@ -55,7 +55,9 @@
                 android:layout_height="match_parent"
                 android:inputType="text"
                 android:layout_weight="6"
-                android:hint="@string/ID" />
+                android:hint="@string/ID"
+                android:textColorLink="@color/colorBlack"
+                android:textCursorDrawable="@null"/>
         </TableRow>
         <!-- 输入密码的行 -->
         <TableRow>
@@ -67,7 +69,8 @@
                 android:layout_height="match_parent"
                 android:inputType="textPassword"
                 android:hint="@string/password"
-                android:layout_weight="10"/>
+                android:layout_weight="10"
+                android:textColorLink="@color/colorBlack"/>
         </TableRow>
         <!-- 定义登录、取消按钮的行 -->
         <LinearLayout android:orientation="horizontal"
@@ -79,8 +82,8 @@
                 android:text="@string/login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#ffffff"
-                android:background="#25d8e1"
+                android:textColor="@color/colorWhite"
+                android:background="@color/colorRed"
                 android:layout_marginTop="5dp"
                 android:textSize="20dp"
                 android:singleLine="false"
@@ -96,7 +99,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/login_problem"
                 android:id="@+id/tvProblem"
-                android:textColor="#25d8e1"
+                android:textColor="@color/colorBlack"
                 android:autoLink="all"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -108,7 +111,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/register"
                 android:id="@+id/tvRegister"
-                android:textColor="#25d8e1"
+                android:textColor="@color/colorBlack"
                 android:autoLink="all"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

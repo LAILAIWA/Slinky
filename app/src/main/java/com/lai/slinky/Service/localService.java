@@ -461,11 +461,14 @@ public class localService extends IntentService {
             ResultSet resultSet = util.selectSQL(sql);
             int num = 0;//记录社团数目
             int num1 = 0;//记录通知数目
+            //出现bug通知和社团不对应，原因：有些社团没有通知，但仍记录进数组
+            //解决方法：不记录无通知的社团
+            //具体：ResultSet.next()若返回结果为空，则返回false
             try{
                 while (resultSet.next()){
                     ListPartyId.add(num,-1);
                     int PartyId = resultSet.getInt("PartyId");
-                    ListPartyId.set(num,PartyId);
+
                     Log.e("----PartyId----->",String.valueOf(PartyId));
 
                     String sql1 ="select PartyName from Slinky.Party_table where PartyId = '" + PartyId + "';";
@@ -473,16 +476,21 @@ public class localService extends IntentService {
                     resultSet1.next();
                     ListPartyName.add(num,-1);
                     String PartyName = resultSet1.getString("PartyName");
-                    if(PartyName == null){
-                        ListPartyName.set(num,"未设置社团名");
-                    }else{
-                        ListPartyName.set(num,PartyName);
-                    }
+
                     Log.e("----PartyName----->",String.valueOf(PartyName));
 
                     String sql2 ="select * from Slinky.Inform_table where PartyId = '" + PartyId + "';";
                     ResultSet resultSet2 = util.selectSQL(sql2);
+                    //如果社团没有通知，则再将其加入数组
                     while (resultSet2.next()) {
+                        ListPartyId.set(num,PartyId);
+                        if(PartyName == null){
+                            ListPartyName.set(num,"未设置社团名");
+                        }else{
+                            ListPartyName.set(num,PartyName);
+                        }
+                        num++;
+
                         ListInformId.add(num1, "");
                         int InformId = resultSet2.getInt("NoticeId");
                         ListInformId.set(num1, InformId);
@@ -523,7 +531,6 @@ public class localService extends IntentService {
                         num1++;
                         Log.e("========>>>>",inf.getInformTitle());
                     }
-                    num++;
                 }
             }catch(Exception ex){
                 Log.e("==================","数据库错误-用户社团表");
