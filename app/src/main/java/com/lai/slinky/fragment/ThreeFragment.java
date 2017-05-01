@@ -29,7 +29,6 @@ public class ThreeFragment extends LazyFragment {
     protected View iniView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.threefragment,null);
         mTitle = getArguments().getString("title");
-        textView = (TextView) view.findViewById(R.id.tv_threefragment);
         return view;
 
     }

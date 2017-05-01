@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_popup"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorGray"
+    android:fitsSystemWindows="false"
+    android:orientation="vertical">
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/colorWhite"></View>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/colorGray" />
+
+    <TextView
+        android:id="@+id/item_popupwindows_camera"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorWhite"
+        android:gravity="center"
+        android:padding="20px"
+        android:text="拍照"
+        android:textColor="@color/colorGray"
+        android:textSize="16sp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/colorGray" />
+
+
+    <TextView
+        android:id="@+id/item_popupwindows_Photo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorWhite"
+        android:gravity="center"
+        android:padding="20px"
+        android:text="从相册中选取"
+        android:textColor="@color/colorGray"
+        android:textSize="16sp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/colorGray" />
+
+    <TextView
+        android:id="@+id/item_popupwindows_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorWhite"
+        android:gravity="center"
+        android:padding="20px"
+        android:text="取消"
+        android:textColor="@color/colorGray"
+        android:textSize="16sp" />
+
+</com.zhy.autolayout.AutoLinearLayout>

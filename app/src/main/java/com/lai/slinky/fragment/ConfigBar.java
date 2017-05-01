@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -47,9 +48,12 @@ public class ConfigBar extends RelativeLayout {
             String TextViewText = attributes.getString(R.styleable.ConfigBar_text);
             if (!TextUtils.isEmpty(TextViewText)) {
                 mTextView.setText(TextViewText);
-                //设置TextView文字颜色
+                //设置TextView文字颜色,文字大小
+                int TextViewTextSize = attributes.getDimensionPixelSize(R.styleable.ConfigBar_text_size, 16);
                 int TextViewTextColor = attributes.getColor(R.styleable.ConfigBar_text_color, Color.WHITE);
                 mTextView.setTextColor(TextViewTextColor);
+                //注意加上TypedValue-------还没看为什么
+                mTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, TextViewTextSize);
                 //设置TextView左边图片
                 int TextViewLeftDrawable = attributes.getResourceId(R.styleable.ConfigBar_textViewLeft_drawable, R.drawable.icon_setting);
                 if (TextViewLeftDrawable != -1) {

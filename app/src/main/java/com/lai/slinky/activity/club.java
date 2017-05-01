@@ -7,21 +7,31 @@ import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.lai.slinky.R;
 import com.lai.slinky.Service.localService;
+import com.lai.slinky.activity.ClubMine.MActivity;
+import com.lai.slinky.activity.ClubMine.MApply;
+import com.lai.slinky.activity.ClubMine.MInform;
+import com.lai.slinky.activity.ClubMine.MQuit;
 import com.lai.slinky.model.team;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by Administrator on 2017/3/16.
@@ -36,6 +46,15 @@ public class Club extends AppCompatActivity {
     static final String StringUserInfo = "userInfo";
     static final String StringClubId = "clubId";
 
+    static final String StringOwnClubInfo = "find_own_club";
+
+    // 控制ToolBar的变量
+    private static final float PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR = 0.9f;
+    private static final float PERCENTAGE_TO_HIDE_TITLE_DETAILS = 0.3f;
+    private static final int ALPHA_ANIMATIONS_DURATION = 200;
+    private boolean mIsTheTitleVisible = false;
+    private boolean mIsTheTitleContainerVisible = true;
+
     public String teamtitle,teamtype,teaminfo,teamPreName,teamNum;
     String partyInfo;
     public int teamid;
@@ -47,22 +66,33 @@ public class Club extends AppCompatActivity {
     Toolbar toolbar;
     CollapsingToolbarLayout collapsingToolbarLayout;
     FloatingActionButton fab;
+    AppBarLayout mAblAppBar; // 整个可以滑动的AppBar
+    LinearLayout mLlTitleContainer; // Title的LinearLayout
+    FrameLayout mFlTitleContainer; // Title的FrameLayout
+    ImageView club_image; // 大图片
+    TextView mTvToolbarTitle; // 标题栏Title
+    CircleImageView mCIv;
 
     List<team> listData = new ArrayList<team>();
     Intent intent;
     team ta;
     byte[] plb;
 
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.club_version_content);
+        setContentView(R.layout.club_version);
 
         //获取控件
+        mCIv = (CircleImageView)findViewById(R.id.club_version_civ);
+        mAblAppBar = (AppBarLayout)findViewById(R.id.appBarLayout);
+        mLlTitleContainer = (LinearLayout)findViewById(R.id.club_version_ll_title_container);
+        mFlTitleContainer = (FrameLayout)findViewById(R.id.club_version_fl_title);
+        mTvToolbarTitle = (TextView)findViewById(R.id.club_version_toolbar_title);
+        club_image = (ImageView)findViewById(R.id.club_image);
         TextView club_president_name = (TextView) findViewById(R.id.club_version_realszname);
         TextView club_info = (TextView)findViewById(R.id.club_version_realinfo);
-        TextView club_member = (TextView)findViewById(R.id.club_version_realmanager);
         TextView club_num = (TextView)findViewById(R.id.club_version_realnum);
-        ImageView club_image = (ImageView)findViewById(R.id.club_image);
 
         toolbar = (Toolbar)findViewById(R.id.toolbar);
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
@@ -70,6 +100,7 @@ public class Club extends AppCompatActivity {
         //获取上个窗口所传递社团信息 userInfo Logo和类中信息：Id，title,type,charge1,info,partyPlace,partyNum
         ta = getIntent().getParcelableExtra(StringClubAllInfo);
         plb = getIntent().getByteArrayExtra(StringByteArray);
+
 
         userinfo = getIntent().getStringArrayExtra("userinfo");
         teamid = ta.getId();//后一个参数：若没取到赋值-1
@@ -89,18 +120,21 @@ public class Club extends AppCompatActivity {
 
 
         //更新控件信息
-        /**
-         * 设置文章标题
-         */
-        collapsingToolbarLayout.setCollapsedTitleTextColor(getResources().getColor(R.color.colorBlack));
-        collapsingToolbarLayout.setTitle(teamtitle);
+//        /**
+//         * 设置文章标题
+//         */
+//        collapsingToolbarLayout.setCollapsedTitleTextColor(getResources().getColor(R.color.colorBlack));
+//        collapsingToolbarLayout.setTitle(teamtitle);
         /**
          * 设置封面
          */
-        club_image.setImageBitmap(partyLogoBm);
+        mTvToolbarTitle.setText(teamtitle);
+        ;
+        club_image.setImageResource(R.drawable.bgg);
         club_president_name.setText(teamPreName);
         club_info.setText(teaminfo);
         club_num.setText(teamNum);
+        mCIv.setImageBitmap(partyLogoBm);
 
         //通过广播与Service保持通信
         serviceReceiver = new ServiceReceiver();
@@ -165,6 +199,8 @@ public class Club extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //跳转并传递基本信息
+                Intent itoclub = new Intent(Club.this, MActivity.class);
+                startActivity(itoclub);
 
             }
         });
@@ -176,6 +212,8 @@ public class Club extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //跳转并传递基本信息
+                Intent itoclub = new Intent(Club.this, MInform.class);
+                startActivity(itoclub);
 
             }
         });
@@ -187,6 +225,9 @@ public class Club extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //跳转并传递基本信息
+                Intent itoclub = new Intent(Club.this, MApply.class);
+                startActivity(itoclub);
+
 
             }
         });
@@ -197,9 +238,23 @@ public class Club extends AppCompatActivity {
         findViewById(R.id.club_quit_btn).setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+                Intent itoclub = new Intent(Club.this, MQuit.class);
+                startActivity(itoclub);
 
             }
         });
+
+        // AppBar的监听
+        mAblAppBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                int maxScroll = appBarLayout.getTotalScrollRange();
+                float percentage = (float) Math.abs(verticalOffset) / (float) maxScroll;
+                handleAlphaOnTitle(percentage);
+                handleToolbarTitleVisibility(percentage);
+            }
+        });
+        initParallaxValues(); // 自动滑动效果
 
     }
 
@@ -237,17 +292,72 @@ public class Club extends AppCompatActivity {
 
 //            team tm = listData.get(0);
 
-            ImageView club_icon = (ImageView)findViewById(R.id.club_image);
             TextView club_info = (TextView)findViewById(R.id.club_version_realinfo);
 
 //            club_icon.setImageBitmap(tm.getPartyLogo());
 //            club_info.setText(tm.getInfo());
             collapsingToolbarLayout.setTitle(teamtitle);
-            club_icon.setImageBitmap(partyLogoBm);
+            mCIv.setImageBitmap(partyLogoBm);
             club_info.setText(partyInfo);
             //更新数据
 
         }
+    }
+
+    // 设置自动滑动的动画效果
+    private void initParallaxValues() {
+        CollapsingToolbarLayout.LayoutParams petDetailsLp =
+                (CollapsingToolbarLayout.LayoutParams) club_image.getLayoutParams();
+
+        CollapsingToolbarLayout.LayoutParams petBackgroundLp =
+                (CollapsingToolbarLayout.LayoutParams) mFlTitleContainer.getLayoutParams();
+
+        petDetailsLp.setParallaxMultiplier(0.9f);
+        petBackgroundLp.setParallaxMultiplier(0.3f);
+
+        club_image.setLayoutParams(petDetailsLp);
+        mFlTitleContainer.setLayoutParams(petBackgroundLp);
+    }
+
+    // 处理ToolBar的显示
+    private void handleToolbarTitleVisibility(float percentage) {
+        if (percentage >= PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR) {
+            if (!mIsTheTitleVisible) {
+                startAlphaAnimation(mTvToolbarTitle, ALPHA_ANIMATIONS_DURATION, View.VISIBLE);
+                mIsTheTitleVisible = true;
+            }
+        } else {
+            if (mIsTheTitleVisible) {
+                startAlphaAnimation(mTvToolbarTitle, ALPHA_ANIMATIONS_DURATION, View.INVISIBLE);
+                mIsTheTitleVisible = false;
+            }
+        }
+    }
+
+    // 控制Title的显示
+    private void handleAlphaOnTitle(float percentage) {
+        if (percentage >= PERCENTAGE_TO_HIDE_TITLE_DETAILS) {
+            if (mIsTheTitleContainerVisible) {
+                startAlphaAnimation(mLlTitleContainer, ALPHA_ANIMATIONS_DURATION, View.INVISIBLE);
+                mIsTheTitleContainerVisible = false;
+            }
+        } else {
+            if (!mIsTheTitleContainerVisible) {
+                startAlphaAnimation(mLlTitleContainer, ALPHA_ANIMATIONS_DURATION, View.VISIBLE);
+                mIsTheTitleContainerVisible = true;
+            }
+        }
+    }
+
+    // 设置渐变的动画
+    public static void startAlphaAnimation(View v, long duration, int visibility) {
+        AlphaAnimation alphaAnimation = (visibility == View.VISIBLE)
+                ? new AlphaAnimation(0f, 1f)
+                : new AlphaAnimation(1f, 0f);
+
+        alphaAnimation.setDuration(duration);
+        alphaAnimation.setFillAfter(true);
+        v.startAnimation(alphaAnimation);
     }
 
     @Override

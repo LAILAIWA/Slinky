@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardElevation="5dp">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/mine_information_version_head"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_centerVertical="true"
+                android:text="头像"
+                android:textSize="@dimen/configBar_text_size"
+                android:textColor="@color/colorBlack"/>
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/img_avatar"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/cat" />
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="20dp" />
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardElevation="5dp">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.lai.slinky.fragment.ConfigBar
+                android:id="@+id/mine_information_version_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                app:configBar_background_color="@color/colorWhite"
+                app:textViewLeft_drawable="@drawable/icon_setting"
+                app:text=" 用户名"
+                app:text_size="@dimen/configBar_text_size"
+                app:textView_visible="true"
+                app:imageView_visible="true"
+                app:imageView_drawable="@drawable/rightarrow_gray"
+                app:text_color="@color/cardview_dark_background"/>
+            <com.lai.slinky.fragment.ConfigBar
+                android:id="@+id/mine_information_version_sex"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:layout_below="@id/mine_information_version_name"
+                app:configBar_background_color="@color/colorWhite"
+                app:textViewLeft_drawable="@drawable/icon_setting"
+                app:text=" 性别"
+                app:text_size="@dimen/configBar_text_size"
+                app:textView_visible="true"
+                app:imageView_visible="true"
+                app:imageView_drawable="@drawable/rightarrow_gray"
+                app:text_color="@color/cardview_dark_background"/>
+            <com.lai.slinky.fragment.ConfigBar
+                android:id="@+id/mine_information_version_birthdate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:layout_below="@id/mine_information_version_sex"
+                app:configBar_background_color="@color/colorWhite"
+                app:textViewLeft_drawable="@drawable/icon_setting"
+                app:text=" 出生日期"
+                app:text_size="@dimen/configBar_text_size"
+                app:textView_visible="true"
+                app:imageView_visible="true"
+                app:imageView_drawable="@drawable/rightarrow_gray"
+                app:text_color="@color/cardview_dark_background"/>
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

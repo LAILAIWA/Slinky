@@ -77,7 +77,32 @@
             android:launchMode="singleInstance">
         </activity>
         <activity
-            android:name=".activity.OwnInform"
+        android:name=".activity.OwnInform"
+        android:label=""
+        android:launchMode="singleInstance">
+        </activity>
+        <activity
+            android:name=".activity.OwnClub"
+            android:label=""
+            android:launchMode="singleInstance">
+        </activity>
+        <activity
+            android:name=".activity.ClubMine.MApply"
+            android:label=""
+            android:launchMode="singleInstance">
+        </activity>
+        <activity
+            android:name=".activity.ClubMine.MQuit"
+            android:label=""
+            android:launchMode="singleInstance">
+        </activity>
+        <activity
+            android:name=".activity.ClubMine.MInform"
+            android:label=""
+            android:launchMode="singleInstance">
+        </activity>
+        <activity
+            android:name=".activity.ClubMine.MActivity"
             android:label=""
             android:launchMode="singleInstance">
         </activity>

@@ -38,6 +38,7 @@
         <attr name="textView_visible" format="boolean" />
         <attr name="imageView_visible" format="boolean" />
         <attr name="text" format="string" />
+        <attr name="text_size" format="dimension" />
         <attr name="text_color" format="color" />
         <attr name="textViewLeft_drawable" format="reference|integer" />
         <attr name="imageView_drawable" format="reference|integer" />

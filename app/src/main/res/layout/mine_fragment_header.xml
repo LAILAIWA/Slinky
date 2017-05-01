@@ -4,7 +4,6 @@
              android:layout_height="220dp">
 <ImageView
     android:id="@+id/ivBg"
-    android:src="@drawable/banner1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:scaleType="centerCrop"
@@ -22,7 +21,7 @@
             android:id="@+id/img_avatar"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:src="@drawable/image_emoticon28" />
+            android:src="@drawable/message_wzcx" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -46,7 +45,7 @@
                     android:gravity="center"
                     android:maxLines="1"
                     android:text="用户ID"
-                    android:textColor="@color/colorWhite"
+                    android:textColor="@color/colorBlack"
                     android:textSize="20.0sp"/>
 
                 <!--<ImageView-->
@@ -89,7 +88,7 @@
                     android:layout_height="wrap_content"
                     android:alpha="0.9"
                     android:text="1"
-                    android:textColor="@color/colorWhite"
+                    android:textColor="@color/colorBlack"
                     android:textSize="20.0sp"/>
 
                 <TextView
@@ -98,7 +97,7 @@
                     android:layout_height="wrap_content"
                     android:alpha="0.5"
                     android:text="@string/mine_tab_followings_title"
-                    android:textColor="@color/colorWhite"
+                    android:textColor="@color/colorBlack"
                     android:textSize="16.0sp"/>
             </LinearLayout>
 
@@ -122,7 +121,7 @@
                     android:layout_height="wrap_content"
                     android:alpha="0.9"
                     android:text="1.1w"
-                    android:textColor="@color/colorWhite"
+                    android:textColor="@color/colorBlack"
                     android:textSize="20.0sp"/>
 
                 <TextView
@@ -131,7 +130,7 @@
                     android:layout_height="wrap_content"
                     android:alpha="0.5"
                     android:text="@string/mine_tab_followers_title"
-                    android:textColor="@color/colorWhite"
+                    android:textColor="@color/colorBlack"
                     android:textSize="16.0sp"/>
             </LinearLayout>
 
@@ -155,7 +154,7 @@
                     android:layout_height="wrap_content"
                     android:alpha="0.9"
                     android:text="10w"
-                    android:textColor="@color/colorWhite"
+                    android:textColor="@color/colorBlack"
                     android:textSize="20.0sp"/>
 
                 <TextView
@@ -164,7 +163,7 @@
                     android:layout_height="wrap_content"
                     android:alpha="0.5"
                     android:text="@string/mine_tab_visitors_title"
-                    android:textColor="@color/colorWhite"
+                    android:textColor="@color/colorBlack"
                     android:textSize="16.0sp"/>
             </LinearLayout>
         </LinearLayout>
