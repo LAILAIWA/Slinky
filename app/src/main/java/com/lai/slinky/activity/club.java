@@ -102,7 +102,7 @@ public class Club extends AppCompatActivity {
         plb = getIntent().getByteArrayExtra(StringByteArray);
 
 
-        userinfo = getIntent().getStringArrayExtra("userinfo");
+        userinfo = getIntent().getStringArrayExtra(StringUserInfo);
         teamid = ta.getId();//后一个参数：若没取到赋值-1
         teamtitle = ta.getTitle();
         Log.e("teamtitle11",teamtitle);

@@ -17,10 +17,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.lai.slinky.AppData;
 import com.lai.slinky.R;
 import com.lai.slinky.RecyclerView.DividerItemDecoration;
 import com.lai.slinky.RecyclerView.OneFragAdapter;
-import com.lai.slinky.Service.localService;
 import com.lai.slinky.activity.OwnInform;
 import com.lai.slinky.model.inform;
 
@@ -30,6 +30,7 @@ import java.util.ArrayList;
 public class OneFragment extends LazyFragment implements SwipeRefreshLayout.OnRefreshListener{
 
     public static final String TAG = "com.lai.slinky.fragment.OneFragment";
+    public static final String TAG2 = "com.lai.slinky.MainActivityToOneFragment";
     static final String StringClubNum= "clubNum";
     //select_own_inform
     static final String StringInformNum = "informNum";
@@ -37,7 +38,7 @@ public class OneFragment extends LazyFragment implements SwipeRefreshLayout.OnRe
     static final String StringSeclectInfo = "serviceSeclect";
     static final String StringUserInfo = "userInfo";
 
-    ServiceReceiver serviceReceiver = new ServiceReceiver();
+    OneServiceReceiver serviceReceiver = new OneServiceReceiver();
     private RecyclerView mRecyclerView;
     private OneFragAdapter mAdapter;
     private DividerItemDecoration mDecoration;
@@ -46,8 +47,10 @@ public class OneFragment extends LazyFragment implements SwipeRefreshLayout.OnRe
     private boolean refreshByBottom = false;
     private TextView textView;
 
+    AppData appData = new AppData();
+
     String[] userInfo;
-    ArrayList<inform> listData = new ArrayList<inform>();
+    ArrayList<inform> listData;
     String mTitle ;
 
     @Override
@@ -59,6 +62,9 @@ public class OneFragment extends LazyFragment implements SwipeRefreshLayout.OnRe
     protected View iniView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.onefragment,null);
         mTitle = getArguments().getString("title");
+
+        appData = (AppData)getActivity().getApplication();
+        listData = appData.getListDataInform();
 
         mRecyclerView = (RecyclerView)view.findViewById(R.id.onefragment_rv);
 
@@ -110,9 +116,10 @@ public class OneFragment extends LazyFragment implements SwipeRefreshLayout.OnRe
     }
 
     //自定义BroadcastReceiver，负责监听从service传回的广播
-    public class ServiceReceiver extends BroadcastReceiver {
+    public class OneServiceReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
+            Log.e("-----OneFragment-----","Receive");
             //重要！先清除再添加
             listData.clear();
 
@@ -129,27 +136,28 @@ public class OneFragment extends LazyFragment implements SwipeRefreshLayout.OnRe
 
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
-        //通过广播与Service保持通信
-        serviceReceiver = new ServiceReceiver();
-        //接收用户信息
-        userInfo = this.getActivity().getIntent().getStringArrayExtra(StringUserInfo);
-        //声明所选服务功能
-        String serviceSeclect = "select_own_inform";
-        //传递用户信息用于数据库查询
-        Intent intent = new Intent(this.getActivity(),localService.class);
-        Bundle b0 = new Bundle();
-        b0.putStringArray(StringUserInfo, userInfo);
-        b0.putString(StringSeclectInfo, serviceSeclect);
-        intent.putExtras(b0);
-
-        //创建IntentFilter
-        IntentFilter filter = new IntentFilter();
-        //指定BroadcastReceiver监听的action
-        filter.addAction(TAG);
-        //注册BroadcastReceiver
-        getActivity().registerReceiver(serviceReceiver, filter);
-        //启动后台Service
-        getActivity().startService(intent);
+//        //通过广播与Service保持通信
+//        serviceReceiver = new OneServiceReceiver();
+        //-----------------------------------改为在MainActivity中请求服务
+//        //接收用户信息
+//        userInfo = this.getActivity().getIntent().getStringArrayExtra(StringUserInfo);
+//        //声明所选服务功能
+//        String serviceSeclect = "select_own_inform";
+//        //传递用户信息用于数据库查询
+//        Intent intent = new Intent(this.getActivity(),localService.class);
+//        Bundle b0 = new Bundle();
+//        b0.putStringArray(StringUserInfo, userInfo);
+//        b0.putString(StringSeclectInfo, serviceSeclect);
+//        intent.putExtras(b0);
+//
+//        //创建IntentFilter
+//        IntentFilter filter = new IntentFilter();
+//        //指定BroadcastReceiver监听的action
+//        filter.addAction(TAG);
+//        //注册BroadcastReceiver
+//        getActivity().registerReceiver(serviceReceiver, filter);
+//        //启动后台Service
+//        getActivity().startService(intent);
 
         //设置LinearLayoutManager布局管理器，实现ListView效果
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
@@ -244,10 +252,27 @@ public class OneFragment extends LazyFragment implements SwipeRefreshLayout.OnRe
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        //通过广播与Service保持通信
+        serviceReceiver = new OneServiceReceiver();
+        //创建IntentFilter
+        IntentFilter filter = new IntentFilter();
+        //指定BroadcastReceiver监听的action
+        filter.addAction(TAG);
+        //注册BroadcastReceiver
+        Log.e("--registerReceiver---","注册广播1");
+        getActivity().registerReceiver(serviceReceiver, filter);
+
+    }
+
+    @Override
     public void onDestroy()
     {
         super.onDestroy();
         //注意不要漏写
+        Log.e("--unregisterReceiver---","注销广播1");
         getActivity().unregisterReceiver(serviceReceiver);
     }
 }

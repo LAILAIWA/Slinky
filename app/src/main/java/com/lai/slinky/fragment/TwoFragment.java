@@ -17,11 +17,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.lai.slinky.AppData;
 import com.lai.slinky.R;
 import com.lai.slinky.RecyclerView.DividerItemDecoration;
 import com.lai.slinky.RecyclerView.GeneralAdapter;
 import com.lai.slinky.RecyclerView.ObjectModel;
-import com.lai.slinky.Service.localService;
 import com.lai.slinky.activity.Club;
 import com.lai.slinky.model.team;
 
@@ -30,9 +30,13 @@ import java.util.ArrayList;
 public class TwoFragment extends LazyFragment implements SwipeRefreshLayout.OnRefreshListener{
 
     public static final String TAG = "com.lai.slinky.fragment.shetuanservice";
+    public static final String TAG3 = "com.lai.slinky.MainActivityToTwoFragment";
     static final String StringClubAllInfo = "club_all_info";
     static final String StringByteArray= "byteArray";
     static final String StringClubNum= "clubNum";
+    static final String StringUserInfo = "userInfo";
+
+    static final String StringIfTwoFragUpdate= "ifTwoFragUpdate";
     Context context = getActivity();
     private RecyclerView mRecyclerView;
     private ArrayList<ObjectModel> mData;
@@ -46,11 +50,13 @@ public class TwoFragment extends LazyFragment implements SwipeRefreshLayout.OnRe
     ArrayList teamid = new ArrayList();
     ArrayList teamtitle = new ArrayList();
     ArrayList teaminfo = new ArrayList();
+    AppData appData = new AppData();
     ArrayList<team> listData = new ArrayList<team>();
     ArrayList<byte[]> LogoArray = new ArrayList<byte[]>();
+    Boolean ifUpdate = false;
 
 
-    ServiceReceiver serviceReceiver = new ServiceReceiver();
+    TwoServiceReceiver serviceReceiver = new TwoServiceReceiver();
     ProgressDialog PD;
 
 
@@ -75,6 +81,10 @@ public class TwoFragment extends LazyFragment implements SwipeRefreshLayout.OnRe
         View view = inflater.inflate(R.layout.twofragment,null);
         mRecyclerView = (RecyclerView)view.findViewById(R.id.twofrag_rv);
 
+        appData = (AppData)getActivity().getApplication();
+        listData = appData.getListDataAllClub();
+        LogoArray = appData.getLogoArray();
+
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(this);
 
@@ -92,46 +102,50 @@ public class TwoFragment extends LazyFragment implements SwipeRefreshLayout.OnRe
     }
 
     //自定义BroadcastReceiver，负责监听从service传回的广播
-    public class ServiceReceiver extends BroadcastReceiver{
+    public class TwoServiceReceiver extends BroadcastReceiver{
         @Override
         public void onReceive(Context context, Intent intent) {
+            Log.e("-----TwoFragment-----","Receive");
             //获取Intent中的消息
+            ifUpdate = intent.getBooleanExtra(StringIfTwoFragUpdate,true);
 
-            //重要！先清除再添加
-            listData.clear();
-
-            //获取Intent中的消息,尝试通过复制的方式
-            ArrayList<team> list1 = intent.getParcelableArrayListExtra(StringClubAllInfo);
-            for(int i = 0;i < list1.size();i++){
-                listData.add(i,list1.get(i));
+            if(ifUpdate){
+                //重要！先清除再添加
+                listData.clear();
+                //之所以不直接赋值，因为listData相当于地址更改，和原来适配器mAdapter绑定的地址变得不同了
+                ArrayList<team> list1 = appData.getListDataAllClub();
+                for(int i = 0;i < list1.size();i++){
+                    listData.add(i,list1.get(i));
+                }
+                Log.e("-----listData-----",listData.get(0).getTitle());
+                ArrayList<byte[]> list2 = appData.getLogoArray();
+                for(int i = 0;i < list2.size();i++){
+                    LogoArray.add(i,list2.get(i));
+                }
+                //更新适配器数据
+                mAdapter.notifyDataSetChanged();
             }
-
-            Log.e("listData1Title->",listData.get(0).getTitle());
-
-
-            //因为Logo要单独传递，所以循环接收
-            int actNum = intent.getIntExtra(StringClubNum,1);
-            Log.e("----ActNum----", String.valueOf(actNum));
-            byte[] plb;
-            for(int n = 0;n < actNum;n++){
-                plb = intent.getByteArrayExtra(StringByteArray + n);
-                LogoArray.add(plb);
-            }
-
-
-
-            //更新适配器数据
-            mAdapter.notifyDataSetChanged();
-
-//            teamid = intent.getIntegerArrayListExtra("teamid");
-//            Log.e("============>>>>","getteamid");
-//            teamtitle = intent.getParcelableArrayListExtra("teamtitle");
-//            Log.e("============>>>>","getteamtitle");
-//            teamtype = intent.getStringArrayExtra("teamtype");
-//            Log.e("============>>>>","getteamtype");
-//            teaminfo = intent.getParcelableArrayListExtra("teaminfo");
-//            Log.e("============>>>>","getteamtitle");
-//            int num = intent.getIntExtra("num",0);
+//
+//            //获取Intent中的消息,尝试通过复制的方式
+//            ArrayList<team> list1 = intent.getParcelableArrayListExtra(StringClubAllInfo);
+//            for(int i = 0;i < list1.size();i++){
+//                listData.add(i,list1.get(i));
+//            }
+//
+//            Log.e("listData1Title->",listData.get(0).getTitle());
+//
+//
+//            //因为Logo要单独传递，所以循环接收
+//            int actNum = intent.getIntExtra(StringClubNum,1);
+//            Log.e("----ActNum----", String.valueOf(actNum));
+//            byte[] plb;
+//            for(int n = 0;n < actNum;n++){
+//                plb = intent.getByteArrayExtra(StringByteArray + n);
+//                LogoArray.add(plb);
+//            }
+//
+//            //更新适配器数据
+//            mAdapter.notifyDataSetChanged();
 
             //根据获取信息，改变RecyclerView信息
 //            PD.dismiss();//dialog结束
@@ -142,40 +156,27 @@ public class TwoFragment extends LazyFragment implements SwipeRefreshLayout.OnRe
 
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
-        //通过广播与Service保持通信
-        serviceReceiver = new ServiceReceiver();
+
+        //-----------------------------------改为在MainActivity中请求服务
         //接收用户信息
-        userInfo = this.getActivity().getIntent().getStringArrayExtra("userInfo");
-        //声明所选服务功能
-        String serviceSeclect = "find_all_club";
-        //传递用户信息用于数据库查询
-        Intent intent = new Intent(this.getActivity(),localService.class);
-        Bundle b0 = new Bundle();
-        b0.putStringArray("userInfo", userInfo);
-        b0.putString("serviceSeclect", serviceSeclect);
-        intent.putExtras(b0);
-
-        //创建IntentFilter
-        IntentFilter filter = new IntentFilter();
-        //指定BroadcastReceiver监听的action
-        filter.addAction(TAG);
-        //注册BroadcastReceiver
-        getActivity().registerReceiver(serviceReceiver, filter);
-
-        //处理社团查询操作
-//        PD = ProgressDialog.show(this.getActivity(),"提示","更新数据中");
-//        PD.setCancelable(true);
-        //启动后台Service
-        getActivity().startService(intent);
-
-//        List<team> listData = new ArrayList<team>();
-//        String[] teamtitle = {"街舞协会","武术协会","动漫协会","计算机协会","桌游协会","足球协会","天文协会","吉他协会"};
-//        String[] teamtype = {"社团","班级"};
-//        String[] teaminfo = {"王三","李四","小明","大明","狗蛋","铁柱","翠花","小美"};
-//        for (int i = 0; i < 8; i++) {
-//            team ta = new team(teamtitle[i],teamtype[0],teaminfo[i]);
-//            listData.add(ta);
-//        }
+        userInfo = this.getActivity().getIntent().getStringArrayExtra(StringUserInfo);
+//        //声明所选服务功能
+//        String serviceSeclect = "find_all_club";
+//        //传递用户信息用于数据库查询
+//        Intent intent = new Intent(this.getActivity(),localService.class);
+//        Bundle b0 = new Bundle();
+//        b0.putStringArray("userInfo", userInfo);
+//        b0.putString("serviceSeclect", serviceSeclect);
+//        intent.putExtras(b0);
+//
+//        //创建IntentFilter
+//        IntentFilter filter = new IntentFilter();
+//        //指定BroadcastReceiver监听的action
+//        filter.addAction(TAG);
+//        //注册BroadcastReceiver
+//        getActivity().registerReceiver(serviceReceiver, filter);
+//        //启动后台Service
+//        getActivity().startService(intent);
 
         //设置LinearLayoutManager布局管理器，实现ListView效果
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
@@ -211,7 +212,7 @@ public class TwoFragment extends LazyFragment implements SwipeRefreshLayout.OnRe
 
                 team ta = listData.get(position);
                 Bundle bb = new Bundle();
-                bb.putStringArray("userinfo",userInfo);//用户信息还需在查询权限用到
+                bb.putStringArray(StringUserInfo,userInfo);//用户信息还需在查询权限用到
 //                bb.putInt("teamid",ta.getId());
 //                bb.putString("teamtitle",ta.getTitle());
 //                bb.putString("teamtype",ta.getType());
@@ -292,9 +293,24 @@ public class TwoFragment extends LazyFragment implements SwipeRefreshLayout.OnRe
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        //通过广播与Service保持通信
+        serviceReceiver = new TwoServiceReceiver();
+        //创建IntentFilter
+        IntentFilter filter = new IntentFilter();
+        //指定BroadcastReceiver监听的action
+        filter.addAction(TAG);
+        //注册BroadcastReceiver
+        Log.e("--registerReceiver---","注册广播2");
+        getActivity().registerReceiver(serviceReceiver, filter);
+    }
+
+    @Override
     public void onDestroy()
     {
         super.onDestroy();
+        Log.e("--unregisterReceiver---","注销广播2");
         //注意不要漏写
         getActivity().unregisterReceiver(serviceReceiver);
     }
