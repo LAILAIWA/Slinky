@@ -1,10 +1,14 @@
 package com.lai.slinky;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -12,39 +16,33 @@ import android.widget.Toast;
 import com.lai.slinky.Service.localService;
 import com.lai.slinky.function.MyMap;
 import com.lai.slinky.model.MarkObject;
-import com.lai.slinky.model.inform;
-import com.lai.slinky.model.team;
+import com.lai.slinky.model.activityy;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String TAG = "com.lai.slinky.fragment.OneFragment";
-    public static final String TAG1 = "com.lai.slinky.fragment.shetuanservice";
-
+    public static final String TAG = "com.lai.slinky.MainActivity";
 
     static final String StringOwnInformInfo = "select_own_inform";
     static final String StringClubAllInfo = "club_all_info";
     static final String StringSeclectInfo = "serviceSeclect";
     static final String StringUserInfo = "userInfo";
-    static final String StringInformList = "informlist";
 
-    static final String StringByteArray= "byteArray";
-    static final String StringClubNum= "clubNum";
-
-//    ServiceReceiverTwo serviceReceiverTwo = new ServiceReceiverTwo();
-//    ServiceReceiverOne serviceReceiverOne = new ServiceReceiverOne();
+    ServiceReceiver serviceReceiver = new ServiceReceiver();
     private MyMap sceneMap;
     private String[] userInfo;
-    ArrayList<inform> listDataOne = new ArrayList<inform>();
 
-    ArrayList<team> listDataTwo = new ArrayList<team>();
-    ArrayList<byte[]> LogoArray = new ArrayList<byte[]>();
+    ArrayList<activityy> listDataActivity = new ArrayList<activityy>();
+    ArrayList ListStartedActivity = new ArrayList();
+    ArrayList ListNotStartActivity = new ArrayList();
+    ArrayList<byte[]> PosterArray = new ArrayList<byte[]>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map_version);
+
 
         //接收传递消息
         userInfo = getIntent().getStringArrayExtra(StringUserInfo);
@@ -56,21 +54,7 @@ public class MainActivity extends AppCompatActivity {
                 .decodeResource(getResources(), R.drawable.map_huaqiao);
         sceneMap.setBitmap(b);
         //添加覆盖物
-        MarkObject markObject = new MarkObject();
-        markObject.setMapX(0.34f);
-        markObject.setMapY(0.5f);
-        markObject.setmBitmap(BitmapFactory.decodeResource(getResources(),
-                R.drawable.activity_position2));
-        markObject.setMarkListener(new MarkObject.MarkClickListener() {
-            @Override
-            public void onMarkClick(int x, int y) {
-                // TODO Auto-generated method stub
-                Toast.makeText(MainActivity.this, "点击覆盖物", Toast.LENGTH_SHORT)
-                        .show();
-            }
-        });
 
-        sceneMap.addMark(markObject);
         ((Button) findViewById(R.id.add))
                 .setOnClickListener(new View.OnClickListener() {
 
@@ -139,76 +123,93 @@ public class MainActivity extends AppCompatActivity {
         startService(intent1);
     }
 
-//    //自定义BroadcastReceiver，负责监听从service传回的广播
-//    public class ServiceReceiverOne extends BroadcastReceiver {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            //重要！先清除再添加
-//            listDataOne.clear();
-//
-//            //获取Intent中的消息,尝试通过复制的方式
-//            ArrayList<inform> list1 = intent.getParcelableArrayListExtra(StringInformList);
-//            for(int i = 0;i < list1.size();i++){
-//                listDataOne.add(i,list1.get(i));
-//            }
-//
-//            //传递广播信息给OneFragment
-//            //传递list
-//            Bundle teamBundle = new Bundle();
-////            teamBundle.putInt(StringClubNum,num);
-////            teamBundle.putInt(StringInformNum,num1);
-//            teamBundle.putParcelableArrayList(StringInformList,listDataOne);
-//
-//            Log.e("============>>>>","sendBroadcastTAG2");
-//            //传送结果广播回UI,参数很关键，连接钥匙
-//            Intent i1 = new Intent(TAG2);
-//            i1.putExtras(teamBundle);
-//            sendBroadcast(i1);
-//        }
-//    }
+    //自定义BroadcastReceiver，负责监听从service传回的广播
+    public class ServiceReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.e("-----MainActivity-----","Receive");
+            Boolean ifUpdate = intent.getBooleanExtra("ifUpdate",false);
+            ListNotStartActivity = intent.getIntegerArrayListExtra("notStartActivity");
+            ListStartedActivity = intent.getIntegerArrayListExtra("startedActivity");
+            if(ifUpdate){
+                updateMap();
+            }
+        }
+    }
 
-//    //自定义BroadcastReceiver，负责监听从service传回的广播
-//    public class ServiceReceiverTwo extends BroadcastReceiver {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            //获取Intent中的消息
-//
-//            //重要！先清除再添加
-//            listDataTwo.clear();
-//
-//            //获取Intent中的消息,尝试通过复制的方式
-//            ArrayList<team> list1 = intent.getParcelableArrayListExtra(StringClubAllInfo);
-//            for(int i = 0;i < list1.size();i++){
-//                listDataTwo.add(i,list1.get(i));
-//            }
-//
-//            Log.e("listData1Title->",listDataTwo.get(0).getTitle());
-//
-//
-//            //因为Logo要单独传递，所以循环接收
-//            int actNum = intent.getIntExtra(StringClubNum,1);
-//            Log.e("----ActNum----", String.valueOf(actNum));
-//            byte[] plb;
-//            for(int n = 0;n < actNum;n++){
-//                plb = intent.getByteArrayExtra(StringByteArray + n);
-//                LogoArray.add(plb);
-//            }
-//
-//            //传递广播信息给TwoFragment
-//            Bundle teamBundle = new Bundle();
-//            teamBundle.putInt(StringClubNum,actNum);
-//            teamBundle.putParcelableArrayList(StringClubAllInfo,listDataTwo);
-//            //因为要传递多维数组，只找到了传递byte[]的方法，所以用for循环添加
-//            for(int n = 0;n < LogoArray.size();n++){
-//                teamBundle.putByteArray(StringByteArray + n,LogoArray.get(n));
-//            }
-//            //传送结果广播回UI,参数很关键，连接钥匙
-//            Intent i1 = new Intent(TAG3);
-//            i1.putExtras(teamBundle);
-//            sendBroadcast(i1);
-//            Log.e("============>>>>","sendBroadcastTAG3");
-//        }
-//    }
+    public void updateMap(){
+        final AppData appData = (AppData)getApplication();
+        listDataActivity = appData.getListDataActivityForMap();
+        appData.getPosterArrayForMap();
+        Boolean ifStarted = false;
+        ArrayList<MarkObject> markObjectArray = new ArrayList<MarkObject>();
+        for(int i = 0; i < listDataActivity.size();i++){
+            for(int j = 0; j < ListStartedActivity.size();j++){
+                if((int)ListStartedActivity.get(j) == listDataActivity.get(i).getActId()){
+                    ifStarted = true;
+                }
+            }
+            MarkObject mo = new MarkObject();
+            markObjectArray.add(mo);
+            addMarkActivity(getX(listDataActivity.get(i).getBuildingId()), getY(listDataActivity.get(i).getBuildingId()), ifStarted, markObjectArray.get(i));
+            ifStarted = false;
+        }
+        for(int i = 0; i < listDataActivity.size();i++){
+            Log.e("-----listDataActivity--",listDataActivity.get(i).getActName());
+        }
+        for(int j = 0; j < ListStartedActivity.size();j++){
+            Log.e("--ListStartedActivity--",String.valueOf(ListStartedActivity.get(j)));
+        }
+        for(int j = 0; j < ListNotStartActivity.size();j++){
+            Log.e("ListNotStartActivity--",String.valueOf(ListNotStartActivity.get(j)));
+        }
+    }
+
+    public float getX(int i){
+        //1.音舞大楼(0.69,0.67)2.学生活动中心(0.70,0.57)3.机电大楼(0.50,0.53)
+        float x = 0.5f;
+        if(i == 1){
+            x = 0.69f;
+        }else if(i == 2){
+            x = 0.70f;
+        }else if(i == 3){
+            x = 0.50f;
+        }
+        return x;
+    }
+    public float getY(int i){
+        //1.音舞大楼(0.69,0.67)2.学生活动中心(0.70,0.57)3.机电大楼(0.50,0.53)
+        float y = 0.5f;
+        if(i == 1){
+            y = 0.67f;
+        }else if(i == 2){
+            y = 0.57f;
+        }else if(i == 3){
+            y = 0.53f;
+        }
+        return y;
+    }
+
+    public void addMarkActivity(float x,float y,Boolean ifStarted,MarkObject markObject){
+        markObject.setMapX(x);
+        markObject.setMapY(y);
+        if (ifStarted){
+            markObject.setmBitmap(BitmapFactory.decodeResource(getResources(),
+                    R.drawable.activity_position2));
+        }else{
+            markObject.setmBitmap(BitmapFactory.decodeResource(getResources(),
+                    R.drawable.activity_position1));
+        }
+        markObject.setMarkListener(new MarkObject.MarkClickListener() {
+            @Override
+            public void onMarkClick(int x, int y) {
+                // TODO Auto-generated method stub
+                Toast.makeText(MainActivity.this, "点击覆盖物", Toast.LENGTH_SHORT)
+                        .show();
+            }
+        });
+        sceneMap.addMark(markObject);
+    }
 
 //    @Override
 //    public boolean onCreateOptionsMenu(Menu menu) {
@@ -218,4 +219,34 @@ public class MainActivity extends AppCompatActivity {
 //        return true;
 //    }
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //如果要通过广播通信，利用生命周期，保证广播已注册
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        //在这里注册，每次返回都会启动
+        Log.e("-----MainActivity-----","registerReceiver");
+        //通过广播与Service保持通信
+        serviceReceiver = new ServiceReceiver();
+        //创建IntentFilter
+        IntentFilter filter = new IntentFilter();
+        //指定BroadcastReceiver监听的action
+        filter.addAction(TAG);
+        //注册BroadcastReceiver
+        registerReceiver(serviceReceiver, filter);
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+        //注意不要漏写
+        Log.e("-----MainActivity-----","unregisterReceiver");
+        unregisterReceiver(serviceReceiver);
+    }
 }

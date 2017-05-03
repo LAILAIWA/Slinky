@@ -1,7 +1,6 @@
 package com.lai.slinky;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,9 +12,12 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.lai.slinky.Service.ActivityForMapService;
 import com.lai.slinky.function.SharePreferencesHelper;
 
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
+
 
 /**
  * Created by Administrator on 2016/11/2.
@@ -32,13 +34,11 @@ public class Login extends Activity{
 
     class JDBCThread extends Thread{
         public Handler mainHandler;
-        ProgressDialog PD;
         String[] strings;
         public void run(){
             Looper.prepare();//创建Looper对象
             //先连接数据库
             util.connSQL();
-
             mainHandler = new Handler() {
                 //定义处理消息的方法
                 @Override
@@ -46,8 +46,6 @@ public class Login extends Activity{
                     super.handleMessage(msg);
                     if (msg.what == 1000) {
                         //处理登陆数据库操作
-                        PD = ProgressDialog.show(Login.this,"提示","正在登录中");
-                        PD.setCancelable(true);
 
                         strings = msg.getData().getStringArray(StringArrayName);
 //                        Util util = new Util();
@@ -57,15 +55,30 @@ public class Login extends Activity{
                         Log.e("============strings[0]",strings[0]);
                         Log.e("==========strings[1]",strings[1]);
 
-                        String sql = "select * from Slinky.User_table where UserId = '" + strings[0] + "' AND Password = '" + strings[1] + "';";
+                        String sql = "select Password from Slinky.User_table where UserId = '" + strings[0] + "';";
                         ResultSet resultSet = util.selectSQL(sql);
                         try{
                             if(resultSet.next()){
-                                //允许登陆
-                                Toast.makeText(getApplicationContext(),"登陆成功",Toast.LENGTH_SHORT).show();
-                                Log.e("==================","输入正确");
-                                PD.dismiss();//dialog结束
+                                String pwd = resultSet.getString("Password");
+                                if(strings[1].equals(pwd)){
+                                    //允许登陆
+                                    Toast.makeText(getApplicationContext(),"登陆成功",Toast.LENGTH_SHORT).show();
+                                    Log.e("==================","输入正确");
 
+                                    //--------预先开启下个界面需要的service---
+                                    startServiceForMainActivity();
+
+                                    Bundle bundlee = new Bundle();
+                                    bundlee.putStringArray("userInfo",strings);
+                                    //登陆成功，跳转
+                                    Intent i = new Intent(Login.this, MainActivity.class);
+                                    i.putExtras(bundlee);
+                                    startActivity(i);
+                                }
+                                else {
+                                    Toast.makeText(getApplicationContext(),"密码输入错误",Toast.LENGTH_SHORT).show();
+                                    Log.e("==================","密码错误");
+                                }
                                 //保存用户登录信息------------bug
 //                                strname = userString.getText().toString();
 //                                strpasswd = pwdString.getText().toString();
@@ -75,25 +88,17 @@ public class Login extends Activity{
 //                                sp.put(mContext,"userid",strname);
 //                                sp.put(mContext,"userpasswd",strpasswd);
 
-                                Bundle bundlee = new Bundle();
-                                bundlee.putStringArray("userInfo",strings);
-                                //登陆成功，跳转
-                                Intent i = new Intent(Login.this, MainActivity.class);
-                                i.putExtras(bundlee);
-
-                                startActivity(i);
                             }
                             else{
-                                //账户密码不一致
-                                Toast.makeText(getApplicationContext(),"账号密码不一致",Toast.LENGTH_SHORT).show();
-                                Log.e("==================","账号密码错误");
+                                //账户未查到密码，即无该Id
+                                Toast.makeText(getApplicationContext(),"账号错误",Toast.LENGTH_SHORT).show();
+                                Log.e("==================","密码错误");
                             }
                         }
                         catch(Exception ex){
                             Log.e("==================","操作错误");
                             ex.printStackTrace();
                         }
-                        PD.dismiss();//dialog结束
                         //不必关闭连接，若关闭则若用户应用内二次进入出现bug。
 //                        util.CloseConn();
                     }
@@ -159,6 +164,19 @@ public class Login extends Activity{
                 startActivity(i);
             }
         });
+    }
+
+    public void startServiceForMainActivity(){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String date = sdf.format(new java.util.Date());
+        Log.e("-----date----",date);
+        //传递时间信息用于数据库查询
+        Intent intent = new Intent(Login.this,ActivityForMapService.class);
+        Bundle b0 = new Bundle();
+        b0.putString("date", date);
+        intent.putExtras(b0);
+        //启动后台Service
+        startService(intent);
     }
 
     @Override

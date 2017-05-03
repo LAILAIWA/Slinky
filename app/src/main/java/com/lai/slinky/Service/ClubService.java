@@ -60,7 +60,6 @@ public class ClubService extends IntentService {
     }
     protected void onHandleIntent(Intent intent) {
         //先连接数据库
-        Log.e("============>>>>","click1222");
         util.connSQL();
         Bundle bb = intent.getExtras();
         String serviceSeclect = bb.getString(StringSeclectInfo);

@@ -163,6 +163,7 @@ public class InfoFragement extends LazyFragment {
     {
         super.onDestroy();
         //注意不要漏写
+        Log.e("--InfoFragment--","unregisterReceiver!");
         getActivity().unregisterReceiver(serviceReceiver);
     }
     @Override

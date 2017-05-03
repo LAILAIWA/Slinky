@@ -29,23 +29,12 @@ android:stretchColumns="1">
         android:id="@+id/userEditTextRegister"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="20dp"
         android:inputType="text"
         android:layout_weight="6"
+        android:maxLength="15"
         android:hint="@string/ID" />
 </TableRow>
-<!-- 输入密码的行 -->
-<TableRow>
-
-    <EditText
-        android:text=""
-        android:id="@+id/pwdEditTextRegister"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:inputType="textPassword"
-        android:hint="@string/password"
-        android:layout_weight="10"/>
-</TableRow>
-    <!-- 输入密码的行 -->
     <TableRow>
 
         <EditText
@@ -57,7 +46,25 @@ android:stretchColumns="1">
             android:hint="@string/nickname"
             android:layout_weight="10"/>
     </TableRow>
-<!-- 定义登录、取消按钮的行 -->
+<!-- 输入密码的行 -->
+<TableRow>
+    <EditText
+        android:text=""
+        android:id="@+id/pwdEditTextRegister"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:inputType="textPassword"
+        android:hint="密码"
+        android:maxLength="16"
+        android:layout_weight="10"/>
+</TableRow>
+    <TableRow>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="同时包含字母和数字的6到16位字符"
+            android:layout_marginStart="30dp"/>
+    </TableRow>
 <LinearLayout android:orientation="horizontal"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"

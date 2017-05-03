@@ -120,6 +120,12 @@
                 <action android:name="com.lai.slinky.ClubService"/>  
             </intent-filter> 
         </service> 
+        <service
+            android:name=".Service.ActivityForMapService">
+            <intent-filter>
+                <action android:name="com.lai.slinky.ActivityForMapService"/>  
+            </intent-filter> 
+        </service>
     </application>
 
 </manifest>
