@@ -12,6 +12,14 @@ public class MarkObject {
     private float mapY;
     private MarkClickListener listener;
 
+    private String ActName;
+    private String Telephone;
+    private String Notice;
+    private String State;
+    private String StartTime;//注意Date数据类型转换
+    private String EndTime;
+    private byte[] Poster;//因为传递Bitmap有限制大小，所以直接存储为Byte
+
     public MarkObject() {
 
     }
@@ -21,6 +29,16 @@ public class MarkObject {
         this.mBitmap = mBitmap;
         this.mapX = mapX;
         this.mapY = mapY;
+    }
+
+    public MarkObject(String actName, String telephone, String notice, String state, String startTime, String endTime, byte[] poster) {
+        ActName = actName;
+        Telephone = telephone;
+        Notice = notice;
+        State = state;
+        StartTime = startTime;
+        EndTime = endTime;
+        Poster = poster;
     }
 
     /**
@@ -66,6 +84,62 @@ public class MarkObject {
      */
     public void setMapY(float mapY) {
         this.mapY = mapY;
+    }
+
+    public String getActName() {
+        return ActName;
+    }
+
+    public void setActName(String actName) {
+        ActName = actName;
+    }
+
+    public String getTelephone() {
+        return Telephone;
+    }
+
+    public void setTelephone(String telephone) {
+        Telephone = telephone;
+    }
+
+    public String getNotice() {
+        return Notice;
+    }
+
+    public void setNotice(String notice) {
+        Notice = notice;
+    }
+
+    public String getState() {
+        return State;
+    }
+
+    public void setState(String state) {
+        State = state;
+    }
+
+    public String getStartTime() {
+        return StartTime;
+    }
+
+    public void setStartTime(String startTime) {
+        StartTime = startTime;
+    }
+
+    public String getEndTime() {
+        return EndTime;
+    }
+
+    public void setEndTime(String endTime) {
+        EndTime = endTime;
+    }
+
+    public byte[] getPoster() {
+        return Poster;
+    }
+
+    public void setPoster(byte[] poster) {
+        Poster = poster;
     }
 
     public MarkClickListener getMarkListener() {

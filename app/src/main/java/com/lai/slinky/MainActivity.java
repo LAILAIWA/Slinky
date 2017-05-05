@@ -2,16 +2,19 @@ package com.lai.slinky;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.lai.slinky.Service.localService;
 import com.lai.slinky.function.MyMap;
@@ -138,21 +141,38 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void updateMap(){
+        //更新活动信息到地图上面
+
+        //获取全局信息
         final AppData appData = (AppData)getApplication();
         listDataActivity = appData.getListDataActivityForMap();
+        PosterArray = appData.getPosterArrayForMap();
         appData.getPosterArrayForMap();
-        Boolean ifStarted = false;
+        Boolean ifStarted = false;//判断活动是否已经开始
+        String state = "未开始";//标记活动状态
+
         ArrayList<MarkObject> markObjectArray = new ArrayList<MarkObject>();
         for(int i = 0; i < listDataActivity.size();i++){
+            //一层for循环添加所有活动信息
             for(int j = 0; j < ListStartedActivity.size();j++){
+                //一层for循环判断活动是否已经开始
                 if((int)ListStartedActivity.get(j) == listDataActivity.get(i).getActId()){
                     ifStarted = true;
+                    state = "已开始";
                 }
             }
-            MarkObject mo = new MarkObject();
+
+            //!!!!!!!!!!!!!!注意Poster在PosterArray中转存，而不是listDataActivity的poster
+            byte[] poster = PosterArray.get(i);
+            Log.e("!!getPoster!!!!!",poster.toString());
+            //将活动标记写入地图
+            MarkObject mo = new MarkObject(listDataActivity.get(i).getActName(), listDataActivity.get(i).getTelephone(),
+                    listDataActivity.get(i).getNotice(), state, listDataActivity.get(i).getStartTime(),
+                    listDataActivity.get(i).getEndTime(), PosterArray.get(i));
             markObjectArray.add(mo);
             addMarkActivity(getX(listDataActivity.get(i).getBuildingId()), getY(listDataActivity.get(i).getBuildingId()), ifStarted, markObjectArray.get(i));
             ifStarted = false;
+            state = "未开始";
         }
         for(int i = 0; i < listDataActivity.size();i++){
             Log.e("-----listDataActivity--",listDataActivity.get(i).getActName());
@@ -190,7 +210,7 @@ public class MainActivity extends AppCompatActivity {
         return y;
     }
 
-    public void addMarkActivity(float x,float y,Boolean ifStarted,MarkObject markObject){
+    public void addMarkActivity(float x, float y, Boolean ifStarted, final MarkObject markObject){
         markObject.setMapX(x);
         markObject.setMapY(y);
         if (ifStarted){
@@ -204,8 +224,42 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onMarkClick(int x, int y) {
                 // TODO Auto-generated method stub
-                Toast.makeText(MainActivity.this, "点击覆盖物", Toast.LENGTH_SHORT)
-                        .show();
+                //显示各个活动信息
+                final AlertDialog.Builder normalDialog =
+                        new AlertDialog.Builder(MainActivity.this);
+                //显示活动海报
+                Bitmap activityBm = BitmapFactory.decodeByteArray(markObject.getPoster(),0,markObject.getPoster().length);
+                Drawable drawable =new BitmapDrawable(activityBm);
+                normalDialog.setIcon(drawable);
+                //显示活动名
+                normalDialog.setTitle(markObject.getActName());
+
+                normalDialog.setMessage("通告: " + markObject.getNotice() + "\n"
+                                         + "电话: " + markObject.getTelephone() + "\n"
+                                         + "开始时间: " + markObject.getStartTime() + "\n"
+                                         + "结束时间: " + markObject.getEndTime() + "\n"
+                                         + "状态: " + markObject.getState());
+//                normalDialog.setPositiveButton("确定",
+//                        new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                //...To-do
+//                            }
+//                        });
+                normalDialog.setNegativeButton("关闭",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //...To-do
+                                //AlertDialog.Builder对话框没有类似finish()或者dismiss()这样的方法。但是它的父类AlertDialog有dismiss方法，而且AlertDialog.Builder在.show()的时候会得到一个AlertDialog对象，
+                                AlertDialog close = normalDialog.show();
+                                close.dismiss();
+                            }
+                        });
+                // 显示
+                normalDialog.show();
+//                Toast.makeText(MainActivity.this, "点击覆盖物", Toast.LENGTH_SHORT)
+//                        .show();
             }
         });
         sceneMap.addMark(markObject);
