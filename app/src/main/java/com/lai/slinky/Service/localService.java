@@ -251,7 +251,7 @@ public class localService extends IntentService {
             //查找用户所加入社团
 
             //初始化
-            Boolean ifReturnResult = true;//判断是否有结果返回
+            Boolean ifReturnResult = false;//判断是否有结果返回
             String PartyMemo,PartyName,PartyPlace,SZId,SZName = "";
             int PartyId,PartyNum;
             Bitmap partyLogo = ((BitmapDrawable) getResources().getDrawable(R.drawable.icon_club)).getBitmap();
@@ -269,107 +269,104 @@ public class localService extends IntentService {
             try{
                 Log.e("resultRowNum",String.valueOf(resultSet.getRow()));
                 //若用户未参加社团
-                if(resultSet.getRow() == 0){
-                    ifReturnResult = false;
-                }else {
-                    while (resultSet.next()) {
-                        //-------获取社团ID
-                        teamid.add(num, -1);
-                        //传递ID以便之后用ID来做数据库查询避免使用中文字符
-                        PartyId = resultSet.getInt("PartyId");
-                        teamid.set(num, PartyId);
-                        Log.e("----PartyId----->", String.valueOf(PartyId));
+                while (resultSet.next()) {
+                    ifReturnResult = true;
+                    //-------获取社团ID
+                    teamid.add(num, -1);
+                    //传递ID以便之后用ID来做数据库查询避免使用中文字符
+                    PartyId = resultSet.getInt("PartyId");
+                    teamid.set(num, PartyId);
+                    Log.e("----PartyId----->", String.valueOf(PartyId));
 
-                        //查询单个社团的基本信息
-                        String sql1 = "select * from Slinky.Party_table where PartyId = '" + PartyId + "';";
-                        ResultSet resultSet1 = util.selectSQL(sql1);
-                        while (resultSet1.next()) {//该层循环次数对应用户参加社团的名字数目=最外层数目
-                            //-------获取社团名
-                            teamtitle.add(num, -1);
-                            PartyName = resultSet1.getString("PartyName");
-                            Log.e("----PartyName----->", PartyName);
-                            //社团名字存储到teamtitle
-                            teamtitle.set(num, PartyName);
+                    //查询单个社团的基本信息
+                    String sql1 = "select * from Slinky.Party_table where PartyId = '" + PartyId + "';";
+                    ResultSet resultSet1 = util.selectSQL(sql1);
+                    while (resultSet1.next()) {//该层循环次数对应用户参加社团的名字数目=最外层数目
+                        //-------获取社团名
+                        teamtitle.add(num, -1);
+                        PartyName = resultSet1.getString("PartyName");
+                        Log.e("----PartyName----->", PartyName);
+                        //社团名字存储到teamtitle
+                        teamtitle.set(num, PartyName);
 
-                            //-------获取社团地点
-                            teamPlace.add(num, -1);
-                            PartyPlace = resultSet1.getString("PartyPlace");
-                            Log.e("----PartyPlace----->", PartyPlace);
-                            //社团地点存储到teamPlace
-                            teamPlace.set(num, PartyPlace);
+                        //-------获取社团地点
+                        teamPlace.add(num, -1);
+                        PartyPlace = resultSet1.getString("PartyPlace");
+                        Log.e("----PartyPlace----->", PartyPlace);
+                        //社团地点存储到teamPlace
+                        teamPlace.set(num, PartyPlace);
 
-                            //-------获取社团人数
-                            teamNum.add(num, -1);
-                            PartyNum = resultSet1.getInt("Number");
-                            Log.e("----PartyNum----->", String.valueOf(PartyNum));
-                            //社团人数存储到teamNum
-                            teamNum.set(num, PartyNum);
+                        //-------获取社团人数
+                        teamNum.add(num, -1);
+                        PartyNum = resultSet1.getInt("Number");
+                        Log.e("----PartyNum----->", String.valueOf(PartyNum));
+                        //社团人数存储到teamNum
+                        teamNum.set(num, PartyNum);
 
-                            //-------获取社团Memo
-                            teaminfo.add(num, -1);
-                            PartyMemo = resultSet1.getString("Memo");
-                            //如果查到为空则赋初值
-                            if (PartyMemo == null) {
-                                PartyMemo = "--未设置社团简介--";
-                            }
-                            Log.e("PartyMemo: ", PartyMemo);
-                            teaminfo.set(num, PartyMemo);
+                        //-------获取社团Memo
+                        teaminfo.add(num, -1);
+                        PartyMemo = resultSet1.getString("Memo");
+                        //如果查到为空则赋初值
+                        if (PartyMemo == null) {
+                            PartyMemo = "--未设置社团简介--";
+                        }
+                        Log.e("PartyMemo: ", PartyMemo);
+                        teaminfo.set(num, PartyMemo);
 
-                            //-------获取社团Logo
-                            //获取数据库Logo Blob数据
-                            plb = new byte[5120];
-                            teamLogo.add(num, plb);
+                        //-------获取社团Logo
+                        //获取数据库Logo Blob数据
+                        plb = new byte[5120];
+                        teamLogo.add(num, plb);
 
-                            Blob blob = resultSet1.getBlob("Logo");
-                            //声明输入输出流
-                            ByteArrayOutputStream os = new ByteArrayOutputStream();
-                            InputStream is = blob.getBinaryStream();
-                            Bitmap bitmap = BitmapFactory.decodeStream(is);
-                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, os);//将图片百分百高质量压缩入流
-                            plb = os.toByteArray();//将输出流赋予字节流
-                            teamLogo.set(num, plb);
+                        Blob blob = resultSet1.getBlob("Logo");
+                        //声明输入输出流
+                        ByteArrayOutputStream os = new ByteArrayOutputStream();
+                        InputStream is = blob.getBinaryStream();
+                        Bitmap bitmap = BitmapFactory.decodeStream(is);
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, os);//将图片百分百高质量压缩入流
+                        plb = os.toByteArray();//将输出流赋予字节流
+                        teamLogo.set(num, plb);
 
-                            //关闭输入输出流
-                            os.close();
-                            is.close();
+                        //关闭输入输出流
+                        os.close();
+                        is.close();
 
-                            //转化为Bitmap，---------不用转化了，直接传送byte字节流
+                        //转化为Bitmap，---------不用转化了，直接传送byte字节流
 //                    partyLogo = BitmapFactory.decodeByteArray(plb,0,plb.length);
 //                        Log.e("----Blob To byte--->","Bitmap");
 
-                            //防止查不到数据，预先赋初值
+                        //防止查不到数据，预先赋初值
 //                    Bitmap partyLogoNum0 = ((BitmapDrawable) getResources().getDrawable(R.drawable.icon_club)).getBitmap();
 //                    partyLogoList.add(num,partyLogoNum0);
-                            //-------获取社团社长ID
-                            String sql2 = "select UserId from Slinky.UserParty_table where PartyId = '" + PartyId + "' AND PositionId = '10';";
-                            ResultSet resultSet2 = util.selectSQL(sql2);
-                            while (resultSet2.next()) {//该层循环次数对应用户参加社团的社长名字数目=最外层数目
-                                SZId = resultSet2.getString("UserId");
-                                Log.e("----SZUserId---->", SZId);
-                                //-------获取社团社长名字
-                                teamCharge.add(num, -1);
-                                String sql3 = "select NickName from Slinky.User_table where UserId = '" + SZId + "';";
-                                ResultSet resultSet3 = util.selectSQL(sql3);
-                                resultSet3.next();
-                                SZName = resultSet3.getString("NickName");
-                                Log.e("----SZUserName---->", SZName);
-                                //社长名字存储到teamCharge
-                                teamCharge.set(num, SZName);
-                            }
-
-                            //类中存储
-                            if (teamtitle.get(num).toString() != null && teamCharge.get(num).toString() != null)
-                                ta = new team((int) teamid.get(num), teamtitle.get(num).toString(), teamtype[0],
-                                        teamCharge.get(num).toString(), teaminfo.get(num).toString(), teamPlace.get(num).toString(),
-                                        (int) teamNum.get(num));
-                            else if (teamtitle.get(num).toString() != null && teamCharge.get(num).toString() == null) //社长为空
-                                ta = new team((int) teamid.get(num), teamtitle.get(num).toString(), teamtype[0],
-                                        "未定", teaminfo.get(num).toString(), teamPlace.get(num).toString(),
-                                        (int) teamNum.get(num));
-                            listData.add(ta);
-                            num++;
-
+                        //-------获取社团社长ID
+                        String sql2 = "select UserId from Slinky.UserParty_table where PartyId = '" + PartyId + "' AND PositionId = '10';";
+                        ResultSet resultSet2 = util.selectSQL(sql2);
+                        while (resultSet2.next()) {//该层循环次数对应用户参加社团的社长名字数目=最外层数目
+                            SZId = resultSet2.getString("UserId");
+                            Log.e("----SZUserId---->", SZId);
+                            //-------获取社团社长名字
+                            teamCharge.add(num, -1);
+                            String sql3 = "select NickName from Slinky.User_table where UserId = '" + SZId + "';";
+                            ResultSet resultSet3 = util.selectSQL(sql3);
+                            resultSet3.next();
+                            SZName = resultSet3.getString("NickName");
+                            Log.e("----SZUserName---->", SZName);
+                            //社长名字存储到teamCharge
+                            teamCharge.set(num, SZName);
                         }
+
+                        //类中存储
+                        if (teamtitle.get(num).toString() != null && teamCharge.get(num).toString() != null)
+                            ta = new team((int) teamid.get(num), teamtitle.get(num).toString(), teamtype[0],
+                                    teamCharge.get(num).toString(), teaminfo.get(num).toString(), teamPlace.get(num).toString(),
+                                    (int) teamNum.get(num));
+                        else if (teamtitle.get(num).toString() != null && teamCharge.get(num).toString() == null) //社长为空
+                            ta = new team((int) teamid.get(num), teamtitle.get(num).toString(), teamtype[0],
+                                    "未定", teaminfo.get(num).toString(), teamPlace.get(num).toString(),
+                                    (int) teamNum.get(num));
+                        listData.add(ta);
+                        num++;
+
                     }
                 }
             }catch(Exception ex){

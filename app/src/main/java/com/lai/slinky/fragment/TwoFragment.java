@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,6 +21,7 @@ import com.lai.slinky.R;
 import com.lai.slinky.RecyclerView.DividerItemDecoration;
 import com.lai.slinky.RecyclerView.GeneralAdapter;
 import com.lai.slinky.RecyclerView.ObjectModel;
+import com.lai.slinky.Service.localService;
 import com.lai.slinky.activity.Club;
 import com.lai.slinky.model.team;
 
@@ -165,7 +165,7 @@ public class TwoFragment extends LazyFragment implements SwipeRefreshLayout.OnRe
 //        //传递用户信息用于数据库查询
 //        Intent intent = new Intent(this.getActivity(),localService.class);
 //        Bundle b0 = new Bundle();
-//        b0.putStringArray("userInfo", userInfo);
+//        b0.putStringArray(StringUserInfo, userInfo);
 //        b0.putString("serviceSeclect", serviceSeclect);
 //        intent.putExtras(b0);
 //
@@ -262,8 +262,18 @@ public class TwoFragment extends LazyFragment implements SwipeRefreshLayout.OnRe
                 @Override
                 public void run() {
 
+                    //声明所选服务功能
+                    String serviceSeclect = "find_all_club";
+                    //传递用户信息用于数据库查询
+                    Intent intent = new Intent(mActivity,localService.class);
+                    Bundle b0 = new Bundle();
+                    b0.putStringArray(StringUserInfo, userInfo);
+                    b0.putString("serviceSeclect", serviceSeclect);
+                    intent.putExtras(b0);
+                    getActivity().startService(intent);
+
                     swipeRefreshLayout.setRefreshing(false);
-                    Snackbar.make(swipeRefreshLayout,"底部刷新",Snackbar.LENGTH_SHORT).show();
+//                    Snackbar.make(swipeRefreshLayout,"底部刷新",Snackbar.LENGTH_SHORT).show();
                     refreshByBottom = false;
                 }
             },3000);
@@ -273,9 +283,18 @@ public class TwoFragment extends LazyFragment implements SwipeRefreshLayout.OnRe
                 public void run() {
 
                     Log.e("----Refresh up----","ooo");
+                    //声明所选服务功能
+                    String serviceSeclect = "find_all_club";
+                    //传递用户信息用于数据库查询
+                    Intent intent = new Intent(mActivity,localService.class);
+                    Bundle b0 = new Bundle();
+                    b0.putStringArray(StringUserInfo, userInfo);
+                    b0.putString("serviceSeclect", serviceSeclect);
+                    intent.putExtras(b0);
+                    getActivity().startService(intent);
 
                     swipeRefreshLayout.setRefreshing(false);
-                    Snackbar.make(swipeRefreshLayout,"顶部刷新",Snackbar.LENGTH_SHORT).show();
+//                    Snackbar.make(swipeRefreshLayout,"顶部刷新",Snackbar.LENGTH_SHORT).show();
                 }
             },3000);
         }

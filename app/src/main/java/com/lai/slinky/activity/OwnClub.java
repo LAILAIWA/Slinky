@@ -160,7 +160,7 @@ public class OwnClub extends AppCompatActivity implements SwipeRefreshLayout.OnR
 
                 team ta = listData.get(position);
                 Bundle bb = new Bundle();
-                bb.putStringArray("userinfo",userInfo);//用户信息还需在查询权限用到
+                bb.putStringArray(StringUserInfo,userInfo);//用户信息还需在查询权限用到
                 bb.putByteArray(StringByteArray,LogoArray.get(position));
                 bb.putParcelable(StringClubAllInfo,listData.get(position));
                 //跳转动作

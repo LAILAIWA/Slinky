@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,6 +20,7 @@ import com.lai.slinky.AppData;
 import com.lai.slinky.R;
 import com.lai.slinky.RecyclerView.DividerItemDecoration;
 import com.lai.slinky.RecyclerView.OneFragAdapter;
+import com.lai.slinky.Service.localService;
 import com.lai.slinky.activity.OwnInform;
 import com.lai.slinky.model.inform;
 
@@ -70,6 +70,8 @@ public class OneFragment extends LazyFragment implements SwipeRefreshLayout.OnRe
 
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.colorWhite);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorRed);
 
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -140,7 +142,7 @@ public class OneFragment extends LazyFragment implements SwipeRefreshLayout.OnRe
 //        serviceReceiver = new OneServiceReceiver();
         //-----------------------------------改为在MainActivity中请求服务
 //        //接收用户信息
-//        userInfo = this.getActivity().getIntent().getStringArrayExtra(StringUserInfo);
+        userInfo = this.getActivity().getIntent().getStringArrayExtra(StringUserInfo);
 //        //声明所选服务功能
 //        String serviceSeclect = "select_own_inform";
 //        //传递用户信息用于数据库查询
@@ -220,9 +222,18 @@ public class OneFragment extends LazyFragment implements SwipeRefreshLayout.OnRe
             swipeRefreshLayout.postDelayed(new Runnable() {
                 @Override
                 public void run() {
+                    //        //声明所选服务功能
+                    String serviceSeclect = "select_own_inform";
+                    //传递用户信息用于数据库查询
+                    Intent intent = new Intent(mActivity,localService.class);
+                    Bundle b0 = new Bundle();
+                    b0.putStringArray(StringUserInfo, userInfo);
+                    b0.putString(StringSeclectInfo, serviceSeclect);
+                    intent.putExtras(b0);
+                    getActivity().startService(intent);
 
                     swipeRefreshLayout.setRefreshing(false);
-                    Snackbar.make(swipeRefreshLayout,"底部刷新",Snackbar.LENGTH_SHORT).show();
+//                    Snackbar.make(mActivity,"底部刷新",Snackbar.LENGTH_SHORT).show();
                     refreshByBottom = false;
                 }
             },3000);
@@ -232,9 +243,17 @@ public class OneFragment extends LazyFragment implements SwipeRefreshLayout.OnRe
                 public void run() {
 
                     Log.e("----Refresh up----","ooo");
+                    String serviceSeclect = "select_own_inform";
+                    //传递用户信息用于数据库查询
+                    Intent intent = new Intent(mActivity,localService.class);
+                    Bundle b0 = new Bundle();
+                    b0.putStringArray(StringUserInfo, userInfo);
+                    b0.putString(StringSeclectInfo, serviceSeclect);
+                    intent.putExtras(b0);
+                    getActivity().startService(intent);
 
                     swipeRefreshLayout.setRefreshing(false);
-                    Snackbar.make(swipeRefreshLayout,"顶部刷新",Snackbar.LENGTH_SHORT).show();
+//                    Snackbar.make(swipeRefreshLayout,"顶部刷新",Snackbar.LENGTH_SHORT).show();
                 }
             },3000);
         }
